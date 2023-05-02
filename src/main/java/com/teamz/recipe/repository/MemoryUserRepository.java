@@ -1,10 +1,9 @@
 package com.teamz.recipe.repository;
 
+import com.teamz.recipe.domain.Board;
 import com.teamz.recipe.domain.User;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class MemoryUserRepository implements UserRepository{
 
@@ -26,6 +25,8 @@ public class MemoryUserRepository implements UserRepository{
                 .filter(user -> user.getNickname().equals(nickname))
                 .findAny();
     }
+
+
 
     public void clearStore() {
         store.clear();
