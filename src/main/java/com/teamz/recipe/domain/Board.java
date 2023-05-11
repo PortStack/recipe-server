@@ -11,7 +11,6 @@ public class Board {
     private String content;
     private int views;
     private int likes;
-//    private List<Comment> comments;
     private String createDate;
     private String modifiedDate;
     private String boardThumbImg;
