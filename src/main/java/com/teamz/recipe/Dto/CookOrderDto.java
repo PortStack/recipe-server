@@ -13,14 +13,14 @@ public class CookOrderDto {
     @Getter
     public static class Request {
         private Long Id;
-        private int order;
+        private int sequence;
         private String content;
         private MultipartFile orderImage;
 
         public CookOrder toEntity(){
             CookOrder cookOrder = CookOrder.builder()
                     .Id(Id)
-                    .order(order)
+                    .sequence(sequence)
                     .content(content)
                     .build();
 

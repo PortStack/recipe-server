@@ -32,7 +32,7 @@ public class UserService {
     닉네임 중복 검사
      */
     private void validDuplicateUserNickName(User user){
-        userRepository.findByNickName(user.getId())
+        userRepository.findByNickName(user.getNickname())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 아이디 입니다");
                 });
@@ -46,7 +46,7 @@ public class UserService {
     /*
     아이디 찾기
      */
-    public Optional<User> findOne(String userId) {
+    public Optional<User> findOne(Long userId) {
         return userRepository.findById(userId);
     }
 

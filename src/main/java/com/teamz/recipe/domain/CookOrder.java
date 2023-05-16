@@ -18,8 +18,10 @@ public class CookOrder {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long Id;
 
-    private int order;
+    @Column(nullable = false)
+    private int sequence;
 
+    @Column(nullable = false)
     private String content;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

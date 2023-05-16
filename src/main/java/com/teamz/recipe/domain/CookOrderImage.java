@@ -24,8 +24,8 @@ public class CookOrderImage{
     @Column(nullable = false)
     private String fullPath;
 
-    @OneToOne(mappedBy = "COOK_ORDER_IMAGE")
-    private CookOrderImage cookOrderImage;
+    @OneToOne(mappedBy = "cookOrderImage")
+    private CookOrder cookOrder;
 
     @Column(nullable = false)
     private Long fileSize;
