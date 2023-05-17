@@ -7,7 +7,7 @@ import java.util.*;
 
 public class MemoryUserRepository implements UserRepository{
 
-    private static Map<String, User> store = new HashMap<>();
+    private static Map<Long, User> store = new HashMap<>();
     @Override
     public User register(User user) {
         store.put(user.getId(),user);
@@ -15,7 +15,7 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(Long id) {
         return Optional.ofNullable(store.get(id));
     }
 

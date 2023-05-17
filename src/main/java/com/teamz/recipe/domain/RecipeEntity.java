@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name="RECIPE")
+@Table(name="RECIPES")
 public class RecipeEntity extends TimeEntity{
     @Id
     @Column(name="RECIPE_ID")
@@ -34,15 +34,15 @@ public class RecipeEntity extends TimeEntity{
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<RecipeIngredientEntity> recipeIngredients = new ArrayList<RecipeIngredientEntity>();
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
-    private List<Comment> comments;
+    private List<CommentEntity> comments;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("order asc")
     private List<CookOrder> cookOrders;
 
@@ -54,5 +54,12 @@ public class RecipeEntity extends TimeEntity{
         }
     }
 
+    public void addRecipeIngredients(RecipeIngredientEntity recipeIngredient){
+        this.recipeIngredients.add(recipeIngredient);
+
+        if(recipeIngredient.getRecipe() != this){
+            recipeIngredient.setRecipe(this);
+        }
+    }
 
 }
