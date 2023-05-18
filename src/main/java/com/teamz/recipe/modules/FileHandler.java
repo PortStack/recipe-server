@@ -24,7 +24,7 @@ public class FileHandler {
 
         // 프로젝트 디렉터리 내의 저장을 위한 절대 경로 설정
         // 경로 구분자 File.separator 사용
-        String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
+        String absolutePath = new File("").getAbsolutePath() + File.separator;
 
         String path = "images" + File.separator + current_date;
         File file = new File(path);
@@ -55,15 +55,15 @@ public class FileHandler {
         }
 
         // 파일명 중복 피하고자 나노초까지 얻어와 지정
-        String new_file_name = System.nanoTime() + originalFileExtension;
+        String new_file_name = absolutePath + path + File.separator + System.nanoTime() + originalFileExtension;
 
         ImageFile = Image.builder()
-                .originFileName(multipartFile.getName())
+                .originFileName(multipartFile.getOriginalFilename())
                 .fullPath(new_file_name)
                 .fileSize(multipartFile.getSize())
                 .build();
 
-        file = new File(absolutePath + path + File.separator + new_file_name);
+        file = new File(new_file_name);
         multipartFile.transferTo(file);
 
         // 파일 권한 설정(쓰기, 읽기)

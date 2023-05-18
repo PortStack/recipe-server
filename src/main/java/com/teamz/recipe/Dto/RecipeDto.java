@@ -3,6 +3,7 @@ package com.teamz.recipe.Dto;
 import com.teamz.recipe.domain.RecipeEntity;
 import com.teamz.recipe.domain.User;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,8 +22,10 @@ public class RecipeDto {
         private String writer;
         private String views;
         private User user;
-        private List<RecipeIngredientDto.Request> recipeIngredientEntities = new ArrayList<>();
+        private List<RecipeIngredientDto.Request> recipeIngredients = new ArrayList<>();
         private List<CookOrderDto.Request> cookOrders = new ArrayList<>();
+        private List<MultipartFile> orderImage;
+        private List<MultipartFile> themNail;
 
         /* Dto -> Entity */
         public RecipeEntity toEntity(){
@@ -31,7 +34,6 @@ public class RecipeDto {
                     .title(title)
                     .writer(writer)
                     .views(0)
-                    .user(user)
                     .build();
 
             return recipe;
@@ -53,7 +55,7 @@ public class RecipeDto {
         private final int views;
         private final List<CommentDto.Response> comments;
         private final List<RecipeIngredientDto.Response> ingredientList;
-        private final Long userId;
+//        private final Long userId;
 
         public Response(RecipeEntity recipes){
             this.id = recipes.getId();
@@ -62,7 +64,6 @@ public class RecipeDto {
             this.createdDate = recipes.getCreatedDate();
             this.modifiedDate = recipes.getModifiedDate();
             this.views = recipes.getViews();
-            this.userId = recipes.getUser().getId();
             this.comments = recipes.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             this.ingredientList = recipes.getRecipeIngredients().stream().map(RecipeIngredientDto.Response::new).collect(Collectors.toList());
         }

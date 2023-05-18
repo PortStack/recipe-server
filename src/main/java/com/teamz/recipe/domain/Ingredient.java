@@ -20,4 +20,5 @@ public class Ingredient {
 
     @Column(length = 50, nullable = false)
     private String name;
+
 }

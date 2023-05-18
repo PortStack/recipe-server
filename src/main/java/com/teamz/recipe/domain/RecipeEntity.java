@@ -30,9 +30,9 @@ public class RecipeEntity extends TimeEntity{
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int views;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "USER_ID")
+//    private User user;
 
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
@@ -45,6 +45,10 @@ public class RecipeEntity extends TimeEntity{
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("order asc")
     private List<CookOrder> cookOrders;
+
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc")
+    private List<ThumbNailEntity> themNails;
 
     public void addCookOrders(CookOrder cookOrder){
         this.cookOrders.add(cookOrder);
