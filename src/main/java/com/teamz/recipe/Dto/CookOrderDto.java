@@ -15,7 +15,7 @@ public class CookOrderDto {
         private Long Id;
         private int sequence;
         private String content;
-        private MultipartFile orderImage;
+        private String orderImageName;
 
         public CookOrder toEntity(){
             CookOrder cookOrder = CookOrder.builder()

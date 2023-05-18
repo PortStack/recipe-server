@@ -8,8 +8,11 @@ import com.teamz.recipe.modules.FileHandler;
 import com.teamz.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Optional;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class RecipeService {
     private final CookOrderRepository cookOrderRepository;
     private final CookOrderImageRepository cookOrderImageRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
+    private final ThemNailRepository themNailRepository;
     private final IngredientRepository ingredientRepository;
     private final FileHandler fileHandler;
 
@@ -29,62 +33,103 @@ public class RecipeService {
         RecipeEntity recipe = recipeDto.toEntity();
 
         List<CookOrderDto.Request> cookOrdersList = recipeDto.getCookOrders();
-        List<RecipeIngredientDto.Request> requestList = recipeDto.getRecipeIngredientEntities();
+        List<RecipeIngredientDto.Request> ingredientList = recipeDto.getRecipeIngredients();
+        System.out.println(ingredientList.get(0).getName());
 
-        recipe = toEntityCookOrder(cookOrdersList,recipe);
-        recipe = toEntityRecipeIngredient(requestList, recipe);
+        RecipeEntity result = recipeRepository.save(recipe);
 
-        return recipeRepository.save(recipe).getId();
+        toEntityCookOrder(cookOrdersList,recipeDto.getOrderImage(),result);
+        toEntityRecipeIngredient(ingredientList, result);
+
+        return result.getId();
 
     }
 
+    public void saveThemNailImage(List<MultipartFile> themNailImages, RecipeEntity recipe) throws Exception {
+        for(MultipartFile themNailImage : themNailImages){
+            Image image = fileHandler.parseFileInfo(themNailImage);
+
+            ThumbNailEntity thumbNail = ThumbNailEntity.builder()
+                    .originFileName(image.getOriginFileName())
+                    .fullPath(image.getFullPath())
+                    .fileSize(image.getFileSize())
+                    .recipe(recipe)
+                    .build();
+
+            themNailRepository.save(thumbNail);
+        }
+    }
+
     // 레시피 재료 저장
-    public RecipeEntity toEntityRecipeIngredient(
+    public void toEntityRecipeIngredient(
             List<RecipeIngredientDto.Request> recipeIngredientList,
             RecipeEntity recipe ) throws Exception {
 
         if(!recipeIngredientList.isEmpty()){
             for(RecipeIngredientDto.Request recipeIngredient : recipeIngredientList){
-
                 // 재료 가져와서 재료 저장 안되어있으면 저장 하도록 해야함
+                Optional<Ingredient> ingredientNull = ingredientRepository.findByName(recipeIngredient.getName());
+                Ingredient ingredient;
+
+                if(ingredientNull.isPresent()){
+                    ingredient = ingredientNull.get();
+                }else{
+                    ingredient = ingredientRepository.save(Ingredient.builder().name(recipeIngredient.getName()).build());
+                }
+
                 RecipeIngredientEntity recipeIngredientEntity = RecipeIngredientEntity.builder()
                         .count(recipeIngredient.getCount())
                         .unit((recipeIngredient.getUnit()))
+                        .ingredient(ingredient)
+                        .recipe(recipe)
                         .build();
 
-                recipe.addRecipeIngredients(recipeIngredientRepository.save(recipeIngredientEntity));
+                recipeIngredientRepository.save(recipeIngredientEntity);
 
             }
         }
 
-        return recipe;
     }
 
     //받은 조리 순서를 저장
-    public RecipeEntity toEntityCookOrder(
+    public void toEntityCookOrder(
             List<CookOrderDto.Request> CookPostorder,
-            RecipeEntity recipe ) throws Exception {
+            List<MultipartFile> orderImages,
+            RecipeEntity recipe
+            ) throws Exception {
+
+        HashMap<String,Image> imageMap = new HashMap<>();
+        if(!orderImages.isEmpty()){
+            for(MultipartFile orderImage : orderImages ){
+                Image image = fileHandler.parseFileInfo(orderImage);
+                imageMap.put(image.getOriginFileName(),image);
+            }
+        }
 
         if(!CookPostorder.isEmpty()){
             for(CookOrderDto.Request cookOrder : CookPostorder){
-                Image image = fileHandler.parseFileInfo(cookOrder.getOrderImage());
-                CookOrderImage orderImage = CookOrderImage.builder()
-                        .originFileName(image.getOriginFileName())
-                        .fullPath(image.getFullPath())
-                        .fileSize(image.getFileSize())
-                        .build();
 
-                CookOrder cookOrderEntity = CookOrder.builder()
-                        .sequence(cookOrder.getSequence())
-                        .content(cookOrder.getContent())
-                        .cookOrderImage(cookOrderImageRepository.save(orderImage))
-                        .build();
+                //리팩토링 필요
+                if(imageMap.containsKey(cookOrder.getOrderImageName())){
+                    Image image = imageMap.remove(cookOrder.getOrderImageName());
+                    CookOrderImage orderImage = CookOrderImage.builder()
+                            .originFileName(image.getOriginFileName())
+                            .fullPath(image.getFullPath())
+                            .fileSize(image.getFileSize())
+                            .build();
 
-                recipe.addCookOrders(cookOrderRepository.save(cookOrderEntity));
+                    CookOrder cookOrderEntity = CookOrder.builder()
+                            .sequence(cookOrder.getSequence())
+                            .content(cookOrder.getContent())
+                            .cookOrderImage(cookOrderImageRepository.save(orderImage))
+                            .recipe(recipe)
+                            .build();
+
+                    cookOrderRepository.save(cookOrderEntity);
+                }
 
             }
         }
 
-        return recipe;
     }
 }

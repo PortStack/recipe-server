@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name="recipe")
+@Table(name="RECIPE_INGREDIENT")
 @Entity
 public class RecipeIngredientEntity {
     @Id
@@ -25,7 +25,7 @@ public class RecipeIngredientEntity {
     @Column(nullable = false)
     private String unit;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INGREDIENT_ID")
     private Ingredient ingredient;
 

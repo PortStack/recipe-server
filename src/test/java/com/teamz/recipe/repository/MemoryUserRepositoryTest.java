@@ -19,7 +19,7 @@ class MemoryUserRepositoryTest {
     public void save() {
         //given
         User user = new User();
-        user.setId("test2");
+        user.setId(1L);
         user.setNickname("test2");
         user.setPassword("!aae12345");
         user.setEmail("aaa123@gmail.com");
