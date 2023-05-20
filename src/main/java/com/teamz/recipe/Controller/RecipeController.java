@@ -22,6 +22,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.save(dto));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity read(@PathVariable Long id){
+        return ResponseEntity.ok(recipeService.findById(id));
+    }
+
     @PostMapping("/test")
     public String test(RecipeDto.Request dto
     ){

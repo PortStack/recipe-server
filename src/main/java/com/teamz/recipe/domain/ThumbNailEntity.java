@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Table(name="THUMBNAIL")
 public class ThumbNailEntity {
     @Id
-    @Column(name="THUMBNAIL_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
