@@ -8,6 +8,7 @@ import com.teamz.recipe.modules.FileHandler;
 import com.teamz.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -43,6 +44,15 @@ public class RecipeService {
 
         return result.getId();
 
+    }
+
+    /* READ 게시글 리스트 조회 readOnly 속성으로 조회속도 개선 */
+    @Transactional(readOnly = true)
+    public RecipeDto.Response findById(Long id) {
+        RecipeEntity posts = recipeRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
+
+        return new RecipeDto.Response(posts);
     }
 
     public void saveThemNailImage(List<MultipartFile> themNailImages, RecipeEntity recipe) throws Exception {

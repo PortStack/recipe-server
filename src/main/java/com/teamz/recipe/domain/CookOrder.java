@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Entity
 public class CookOrder {
     @Id
-    @Column(name="COOK_ORDER_ID")
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long Id;
 

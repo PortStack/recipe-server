@@ -1,5 +1,6 @@
 package com.teamz.recipe.Dto;
 
+import com.teamz.recipe.domain.CommentEntity;
 import com.teamz.recipe.domain.CookOrder;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,23 @@ public class CookOrderDto {
             return cookOrder;
         }
 
+
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public static class Response {
+        private final Long id;
+        private final int sequence;
+        private final String content;
+        private final String imageUrl;
+
+        public Response(CookOrder cookOrder){
+            this.id = cookOrder.getId();
+            this.sequence = cookOrder.getSequence();
+            this.content = cookOrder.getContent();
+            this.imageUrl = cookOrder.getCookOrderImage().getFullPath();
+        }
 
     }
 }

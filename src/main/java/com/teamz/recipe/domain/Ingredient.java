@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Ingredient {
     @Id
-    @Column(name="INGREDIENT_ID")
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 

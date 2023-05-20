@@ -43,7 +43,7 @@ public class RecipeEntity extends TimeEntity{
     private List<CommentEntity> comments;
 
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @OrderBy("order asc")
+    @OrderBy("id asc")
     private List<CookOrder> cookOrders;
 
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

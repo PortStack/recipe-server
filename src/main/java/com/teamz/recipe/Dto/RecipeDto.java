@@ -55,6 +55,7 @@ public class RecipeDto {
         private final int views;
         private final List<CommentDto.Response> comments;
         private final List<RecipeIngredientDto.Response> ingredientList;
+        private final List<CookOrderDto.Response> cookOrderList;
 //        private final Long userId;
 
         public Response(RecipeEntity recipes){
@@ -66,6 +67,7 @@ public class RecipeDto {
             this.views = recipes.getViews();
             this.comments = recipes.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             this.ingredientList = recipes.getRecipeIngredients().stream().map(RecipeIngredientDto.Response::new).collect(Collectors.toList());
+            this.cookOrderList = recipes.getCookOrders().stream().map(CookOrderDto.Response::new).collect(Collectors.toList());
         }
     }
 }
