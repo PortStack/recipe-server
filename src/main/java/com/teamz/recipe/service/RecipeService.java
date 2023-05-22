@@ -7,6 +7,8 @@ import com.teamz.recipe.domain.*;
 import com.teamz.recipe.modules.FileHandler;
 import com.teamz.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,10 +37,10 @@ public class RecipeService {
 
         List<CookOrderDto.Request> cookOrdersList = recipeDto.getCookOrders();
         List<RecipeIngredientDto.Request> ingredientList = recipeDto.getRecipeIngredients();
-        System.out.println(ingredientList.get(0).getName());
 
         RecipeEntity result = recipeRepository.save(recipe);
 
+        saveThemNailImage(recipeDto.getThemNail(),result);
         toEntityCookOrder(cookOrdersList,recipeDto.getOrderImage(),result);
         toEntityRecipeIngredient(ingredientList, result);
 
@@ -46,13 +48,26 @@ public class RecipeService {
 
     }
 
-    /* READ 게시글 리스트 조회 readOnly 속성으로 조회속도 개선 */
+    /* UPDATE (dirty checking 영속성 컨텍스트)
+     *  User 객체를 영속화시키고, 영속화된 User 객체를 가져와 데이터를 변경하면
+     * 트랜잭션이 끝날 때 자동으로 DB에 저장해준다. */
     @Transactional(readOnly = true)
     public RecipeDto.Response findById(Long id) {
         RecipeEntity posts = recipeRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
 
         return new RecipeDto.Response(posts);
+    }
+
+    @Transactional
+    public int updateView(Long id) {
+        return recipeRepository.updateView(id);
+    }
+
+    /* Paging and Sort */
+    @Transactional(readOnly = true)
+    public Page<RecipeEntity> pageList(Pageable pageable) {
+        return recipeRepository.findAll(pageable);
     }
 
     public void saveThemNailImage(List<MultipartFile> themNailImages, RecipeEntity recipe) throws Exception {

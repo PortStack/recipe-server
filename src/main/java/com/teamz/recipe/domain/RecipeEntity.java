@@ -1,10 +1,7 @@
 package com.teamz.recipe.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +14,6 @@ import java.util.List;
 @Table(name="RECIPES")
 public class RecipeEntity extends TimeEntity{
     @Id
-    @Column(name="RECIPE_ID")
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 

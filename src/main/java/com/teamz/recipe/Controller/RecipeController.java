@@ -2,13 +2,15 @@ package com.teamz.recipe.Controller;
 
 
 import com.teamz.recipe.Dto.RecipeDto;
+import com.teamz.recipe.domain.RecipeEntity;
 import com.teamz.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RequestMapping("/recipe")
 @RequiredArgsConstructor
@@ -22,9 +24,16 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.save(dto));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/read/{id}")
     public ResponseEntity read(@PathVariable Long id){
+        recipeService.updateView(id);
         return ResponseEntity.ok(recipeService.findById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity retrieveRecipes(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<RecipeEntity> posts = recipeService.pageList(pageable);
+        return ResponseEntity.ok(posts.map(m -> new RecipeDto.Response(m)));
     }
 
     @PostMapping("/test")
