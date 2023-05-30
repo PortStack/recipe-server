@@ -16,6 +16,9 @@ public class User {
     private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    private String userId;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String password;
 
     @Column(columnDefinition = "TEXT", nullable = false)
