@@ -1,7 +1,7 @@
 package com.teamz.recipe.service;
 
 import com.teamz.recipe.domain.Board;
-import com.teamz.recipe.modules.CurrentDateTime;
+import com.teamz.recipe.global.modules.CurrentDateTime;
 import com.teamz.recipe.repository.BoardRepository;
 
 import java.util.List;

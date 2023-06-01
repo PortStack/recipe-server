@@ -14,6 +14,7 @@ public class UserDto {
     private String createdDate;
     private String modifiedDate;
     private String encryptedPwd;
+    private String Role;
 
     @Builder
     public UserDto(
@@ -24,7 +25,8 @@ public class UserDto {
             String userId,
             String createdDate,
             String modifiedDate,
-            String encryptedPwd
+            String encryptedPwd,
+            String Role
     ) {
         this.email = email;
         this.password = password;
@@ -34,5 +36,6 @@ public class UserDto {
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.encryptedPwd = encryptedPwd;
+        this.Role = Role;
     }
 }

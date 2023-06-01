@@ -1,4 +1,4 @@
-package com.teamz.recipe.modules;
+package com.teamz.recipe.global.modules;
 
 import com.teamz.recipe.domain.Image;
 import org.springframework.stereotype.Component;
