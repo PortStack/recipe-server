@@ -4,7 +4,7 @@ import com.teamz.recipe.Dto.CookOrderDto;
 import com.teamz.recipe.Dto.RecipeDto;
 import com.teamz.recipe.Dto.RecipeIngredientDto;
 import com.teamz.recipe.domain.*;
-import com.teamz.recipe.modules.FileHandler;
+import com.teamz.recipe.global.modules.FileHandler;
 import com.teamz.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.HashMap;
 import java.util.List;

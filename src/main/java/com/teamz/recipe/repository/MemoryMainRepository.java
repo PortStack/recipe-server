@@ -1,6 +1,5 @@
 package com.teamz.recipe.repository;
 
-import com.teamz.recipe.domain.Board;
 import com.teamz.recipe.domain.Recipe;
 
 import java.util.*;

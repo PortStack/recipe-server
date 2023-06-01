@@ -9,6 +9,7 @@ import lombok.Getter;
 public class AuthDto {
     @Getter
     public static class RequestRegister {
+        private String account;
         private String password;
         private String email;
         private String nickname;
@@ -17,7 +18,7 @@ public class AuthDto {
 
     @Getter
     public static class RequestLogin {
-        private String email;
+        private String account;
 
         private String password;
     }

@@ -1,4 +1,4 @@
-package com.teamz.recipe.modules;
+package com.teamz.recipe.global.modules;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.teamz.recipe.modules;
+package com.teamz.recipe.global.modules;
 
 import org.apache.commons.logging.Log;
 
