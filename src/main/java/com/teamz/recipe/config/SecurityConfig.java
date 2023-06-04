@@ -56,8 +56,8 @@ public class SecurityConfig {
                 );
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/register", "/auth/login").permitAll()
-                        .requestMatchers("/user/**").hasRole("USER"))
+                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken").permitAll()
+                        .requestMatchers( "/auth/logout").hasRole("USER"))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JWT 인증 필터 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);

@@ -33,13 +33,17 @@ public class AuthService {
             throw new BadCredentialsException("잘못된 계정정보입니다.");
         }
 
+        String accessToken = jwtProvider.createAccessToken(user.getAccount(), user.getId(), user.getRoles());
+        String refreshToken = jwtProvider.createRefreshToken(user.getAccount(), user.getId(),user.getRoles());
 
         return ResponseSingDto.builder()
+                .id(user.getId())
                 .account(user.getAccount())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .roles(user.getRoles())
-                .token(jwtProvider.createToken(user.getAccount(), user.getRoles()))
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
 
     }
@@ -70,8 +74,8 @@ public class AuthService {
         return true;
     }
 
-    public ResponseSingDto getUser(String account) throws Exception {
-        UserEntity user = authRepository.findByAccount(account)
+    public ResponseSingDto getUser(Long userId) throws Exception {
+        UserEntity user = authRepository.findById(userId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
         return new ResponseSingDto(user);
     }

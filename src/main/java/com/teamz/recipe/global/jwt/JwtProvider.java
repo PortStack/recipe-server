@@ -26,31 +26,60 @@ import java.util.List;
 @Component
 public class JwtProvider {
 
-    @Value("${jwt.secret.key}")
-    private String salt;
+    @Value("${jwt.secret.accessKey}")
+    private String accessToken;
 
-    private Key secretKey;
+    @Value("${jwt.secret.refreshKey}")
+    private String refreshToken;
+
+    private Key accessKey;
+    private Key refreshKey;
 
     // 만료시간 : 1Hour
-    private final long exp = 1000L * 60 * 60;
+    private final long accessTokenValidTime = 1000L * 60 * 60;
+
+    //refreshToken 만료기간 : 14 Day
+    private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 15;
+
+    Date now = new Date();
 
     private final JpaUserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {
-        secretKey = Keys.hmacShaKeyFor(salt.getBytes(StandardCharsets.UTF_8));
+        accessKey = Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8));
+        refreshKey = Keys.hmacShaKeyFor(refreshToken.getBytes(StandardCharsets.UTF_8));
     }
 
-    // 토큰 생성
-    public String createToken(String account, List<Authority> roles) {
+    // access토큰 생성
+    public String createAccessToken(String account,Long userId, List<Authority> roles) {
         Claims claims = Jwts.claims().setSubject(account);
+        claims.put("userId", userId);
         claims.put("roles", roles);
-        Date now = new Date();
+
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(now.getTime() + accessTokenValidTime))
+                .signWith(accessKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /*
+    refresh Token 생성
+     */
+    public String createRefreshToken(String account, Long userId, List<Authority> roles) {
+        Claims claims = Jwts.claims().setSubject(account);
+        claims.put("userId", userId);
+        claims.put("roles", roles);
+
+        return Jwts.builder()
+                .setClaims(claims) // 정보 저장
+                .setIssuedAt(now) // 토큰 발행 시간 정보
+                .setExpiration(new Date(now.getTime() + refreshTokenValidTime)) // set Expire Time
+                .signWith(refreshKey, SignatureAlgorithm.HS256)  // 사용할 암호화 알고리즘과
+                // signature 에 들어갈 secret값 세팅
                 .compact();
     }
 
@@ -63,7 +92,7 @@ public class JwtProvider {
 
     // 토큰에 담겨있는 유저 account 획득
     public String getAccount(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(accessKey).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     // Authorization Header를 통해 인증을 한다.
@@ -80,11 +109,27 @@ public class JwtProvider {
             } else {
                 token = token.split(" ")[1].trim();
             }
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(accessKey).build().parseClaimsJws(token);
             // 만료되었을 시 false
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Claims parseAccessToken(String accessToken) {
+        return parseToken(accessToken, accessKey);
+    }
+
+    public Claims parseRefreshToken(String refreshToken) {
+        return parseToken(refreshToken, refreshKey);
+    }
+
+    public Claims parseToken(String token, Key secretKey) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
