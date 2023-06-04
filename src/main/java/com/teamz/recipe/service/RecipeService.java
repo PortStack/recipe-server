@@ -26,13 +26,23 @@ public class RecipeService {
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final ThemNailRepository themNailRepository;
     private final IngredientRepository ingredientRepository;
+    private final AuthRepository authRepository;
+    private final RecipeLikeRepository recipeLikeRepository;
     private final FileHandler fileHandler;
 
 
     /* CREATE */
     public Long save(RecipeDto.Request recipeDto) throws Exception {
 
-        RecipeEntity recipe = recipeDto.toEntity();
+        UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 존재하지 않습니다" + recipeDto.getWriter()));
+
+        RecipeEntity recipe = RecipeEntity.builder()
+                .id(recipeDto.getId())
+                .title(recipeDto.getTitle())
+                .user(user)
+                .views(0)
+                .build();
 
         List<CookOrderDto.Request> cookOrdersList = recipeDto.getCookOrders();
         List<RecipeIngredientDto.Request> ingredientList = recipeDto.getRecipeIngredients();
@@ -51,11 +61,11 @@ public class RecipeService {
      *  User 객체를 영속화시키고, 영속화된 User 객체를 가져와 데이터를 변경하면
      * 트랜잭션이 끝날 때 자동으로 DB에 저장해준다. */
     @Transactional(readOnly = true)
-    public RecipeDto.Response findById(Long id) {
-        RecipeEntity posts = recipeRepository.findById(id).orElseThrow(() ->
+    public RecipeEntity findById(Long id) {
+        RecipeEntity recipe = recipeRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
 
-        return new RecipeDto.Response(posts);
+        return recipe;
     }
 
     @Transactional
@@ -155,5 +165,38 @@ public class RecipeService {
             }
         }
 
+    }
+
+    //좋아요
+    @Transactional
+    public boolean saveLike(Long recipeID, String account){
+        //아이디 검색
+        UserEntity user = authRepository.findByAccount(account).orElseThrow(() ->
+                new IllegalArgumentException("해당 아이다가 존재하지 않습니다. nickName: " + account));
+
+        //좋아요 기록 검색
+        Optional<RecipeLikeEntity> findLike = findLike(recipeID, user.getId());
+
+        if(findLike.isEmpty()){
+            RecipeEntity recipe = recipeRepository.findById(recipeID).orElseThrow(() ->
+                    new IllegalArgumentException("해당 레시피가 존재하지 않습니다. recipeId: " + recipeID));
+
+            RecipeLikeEntity recipeLikeEntity = RecipeLikeEntity.builder()
+                    .recipe(recipe)
+                    .user(user)
+                    .build();
+
+            recipeLikeRepository.save(recipeLikeEntity);
+            recipeRepository.plusLike(recipeID);
+            return true;
+        }else{
+            recipeLikeRepository.deleteByRecipe_IdAndUser_Id(recipeID, user.getId());
+            recipeRepository.minusLike(recipeID);
+            return false;
+        }
+    }
+
+    public Optional<RecipeLikeEntity> findLike(Long recipeID, Long userID){
+        return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
     }
 }

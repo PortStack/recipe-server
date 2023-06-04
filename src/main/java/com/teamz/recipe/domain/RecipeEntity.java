@@ -20,15 +20,15 @@ public class RecipeEntity extends TimeEntity{
     @Column(length = 500, nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private String writer;
-
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int views;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "USER_ID")
-//    private User user;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int likes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private UserEntity user;
 
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬

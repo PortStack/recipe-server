@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseSingDto {
+    private Long id;
     private String account;
 
     private String nickname;
@@ -24,9 +25,12 @@ public class ResponseSingDto {
 
     private List<Authority> roles = new ArrayList<>();
 
-    private String token;
+    private String accessToken;
+
+    private String refreshToken;
 
     public ResponseSingDto(UserEntity member) {
+        this.id = member.getId();
         this.account = member.getAccount();
         this.nickname = member.getNickname();
         this.email = member.getEmail();

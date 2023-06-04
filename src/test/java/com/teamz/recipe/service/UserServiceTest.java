@@ -64,5 +64,5 @@ class UserServiceTest {
         Assertions.assertThat(false).isEqualTo(passwordResult);
     }
 
-    @Autowired  AuthServiceImpl userService;
+    @Autowired  AuthService userService;
 }

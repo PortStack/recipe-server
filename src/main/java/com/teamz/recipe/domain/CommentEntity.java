@@ -33,7 +33,7 @@ public class CommentEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // 작성자
+    private UserEntity user; // 작성자
 
     public void update(String comment){
         this.comment = comment;
