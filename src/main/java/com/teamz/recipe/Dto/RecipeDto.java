@@ -1,7 +1,6 @@
 package com.teamz.recipe.Dto;
 
 import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.User;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,23 +20,22 @@ public class RecipeDto {
         private String title;
         private String writer;
         private String views;
-        private User user;
         private List<RecipeIngredientDto.Request> recipeIngredients = new ArrayList<>();
         private List<CookOrderDto.Request> cookOrders = new ArrayList<>();
         private List<MultipartFile> orderImage;
         private List<MultipartFile> themNail;
 
-        /* Dto -> Entity */
-        public RecipeEntity toEntity(){
-            RecipeEntity recipe = RecipeEntity.builder()
-                    .id(id)
-                    .title(title)
-                    .writer(writer)
-                    .views(0)
-                    .build();
-
-            return recipe;
-        }
+//        /* Dto -> Entity */
+//        public RecipeEntity toEntity(){
+//            RecipeEntity recipe = RecipeEntity.builder()
+//                    .id(id)
+//                    .title(title)
+//                    .writer(writer)
+//                    .views(0)
+//                    .build();
+//
+//            return recipe;
+//        }
     }
 
     /**
@@ -50,21 +48,24 @@ public class RecipeDto {
     public static class Response {
         private final Long id;
         private final String title;
-        private final String writer;
+        private final String nickname;
         private final LocalDateTime createdDate, modifiedDate;
         private final int views;
+        private final int likes;
+        private final boolean likeState;
         private final List<CommentDto.Response> comments;
         private final List<RecipeIngredientDto.Response> ingredientList;
         private final List<CookOrderDto.Response> cookOrderList;
-//        private final Long userId;
 
-        public Response(RecipeEntity recipes){
+        public Response(RecipeEntity recipes,boolean likeState){
             this.id = recipes.getId();
             this.title = recipes.getTitle();
-            this.writer = recipes.getWriter();
+            this.nickname = recipes.getUser().getNickname();
             this.createdDate = recipes.getCreatedDate();
             this.modifiedDate = recipes.getModifiedDate();
             this.views = recipes.getViews();
+            this.likes = recipes.getLikes();
+            this.likeState = likeState;
             this.comments = recipes.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             this.ingredientList = recipes.getRecipeIngredients().stream().map(RecipeIngredientDto.Response::new).collect(Collectors.toList());
             this.cookOrderList = recipes.getCookOrders().stream().map(CookOrderDto.Response::new).collect(Collectors.toList());

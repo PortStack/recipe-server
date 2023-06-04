@@ -3,6 +3,7 @@ package com.teamz.recipe.Dto;
 import com.teamz.recipe.domain.CommentEntity;
 import com.teamz.recipe.domain.RecipeEntity;
 import com.teamz.recipe.domain.User;
+import com.teamz.recipe.domain.UserEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class CommentDto {
         private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
         private String modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));;
         private RecipeEntity recipe;
-        private User user; // 작성자
+        private UserEntity user; // 작성자
         /* Dto -> Entity */
         public CommentEntity toEntity(){
             CommentEntity comments = CommentEntity.builder()

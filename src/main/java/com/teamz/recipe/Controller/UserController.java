@@ -88,7 +88,7 @@ public class UserController {
 
         Long userId = Long.valueOf((Integer) claims.get("userId"));
 
-        ResponseSingDto responseSingDto = authService.getUser(userId);
+        ResponseSingDto responseSingDto = new ResponseSingDto(authService.findByID(userId));
 
         List role = (List) claims.get("roles");
         String account = claims.getSubject();

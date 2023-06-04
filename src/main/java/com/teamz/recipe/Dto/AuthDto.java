@@ -46,8 +46,8 @@ public class AuthDto {
         private String email;
         private String nickname;
         private String userId;
-        private String encryptedPwd;
 
 
     }
+
 }

@@ -74,10 +74,22 @@ public class AuthService {
         return true;
     }
 
-    public ResponseSingDto getUser(Long userId) throws Exception {
+    public UserEntity findByID(Long userId) throws Exception {
         UserEntity user = authRepository.findById(userId)
                 .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
-        return new ResponseSingDto(user);
+        return user;
+    }
+
+    public UserEntity findByAccount(String account) throws Exception {
+        UserEntity user = authRepository.findByAccount(account)
+                .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다. " + account));
+        return user;
+    }
+
+    public UserEntity findByNickname(String nickname) throws Exception {
+        UserEntity user = authRepository.findByNickname(nickname)
+                .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다. " + nickname));
+        return user;
     }
 
     public boolean ConfirmationPassword(String pwd){
