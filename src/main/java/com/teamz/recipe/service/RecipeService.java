@@ -13,14 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
+    private final BoardRepository boardRepository;
     private final CookOrderRepository cookOrderRepository;
     private final CookOrderImageRepository cookOrderImageRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
@@ -198,5 +197,61 @@ public class RecipeService {
 
     public Optional<RecipeLikeEntity> findLike(Long recipeID, Long userID){
         return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
+    }
+
+    public Optional<RecipeEntity> searchInfo(String searchText){
+        List<RecipeEntity> store = recipeRepository.findAll();
+
+        return store.stream()
+                .filter(recipe -> recipe.getTitle().contains(searchText))
+                .findAny();
+    }
+
+    public List<RecipeEntity> recomendInfo() {
+        List<RecipeEntity> store = recipeRepository.findAll();
+        List<RecipeEntity> resultRecipe = new ArrayList<RecipeEntity>();
+        store.sort(new RecipeLikeComparator().reversed());
+
+        for(int i=0;i<6;i++){
+            resultRecipe.add(store.get(i));
+        }
+
+        return resultRecipe;
+    }
+
+    public List<Board> topBoardInfo() {
+        List<Board> store = boardRepository.findAll();
+        List<Board> resultBoard = new ArrayList<Board>();
+        store.sort(new BoardLikeComparator().reversed());
+
+        for(int i=0;i<4;i++){
+            resultBoard.add(store.get(i));
+        }
+
+        return resultBoard;
+    }
+}
+
+class BoardLikeComparator implements Comparator<Board> {
+    @Override
+    public int compare(Board b1, Board b2) {
+        if (b1.getLikes() > b2.getLikes()) {
+            return 1;
+        } else if (b1.getLikes() < b2.getLikes()) {
+            return -1;
+        }
+        return 0;
+    }
+}
+
+class RecipeLikeComparator implements Comparator<RecipeEntity> {
+    @Override
+    public int compare(RecipeEntity r1, RecipeEntity r2) {
+        if (r1.getLikes() > r2.getLikes()) {
+            return 1;
+        } else if (r1.getLikes() < r2.getLikes()) {
+            return -1;
+        }
+        return 0;
     }
 }
