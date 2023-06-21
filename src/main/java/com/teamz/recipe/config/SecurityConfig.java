@@ -63,7 +63,7 @@ public class SecurityConfig {
                 );
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","recipe/read/*").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","/recipe/read/*","/recipe","/images/*/*").permitAll()
                         .requestMatchers( "/auth/logout",
                                 "/recipe/new",
                                 "/recipe/like/*",
