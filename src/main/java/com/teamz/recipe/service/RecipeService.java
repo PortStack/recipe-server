@@ -19,6 +19,7 @@ import java.util.*;
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
+    private final SearchRepository searchRepository;
     private final BoardRepository boardRepository;
     private final CookOrderRepository cookOrderRepository;
     private final CookOrderImageRepository cookOrderImageRepository;
@@ -35,6 +36,8 @@ public class RecipeService {
 
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다" + recipeDto.getWriter()));
+
+        System.out.println("닉네임:"+user.getNickname());
 
         RecipeEntity recipe = RecipeEntity.builder()
                 .id(recipeDto.getId())
@@ -199,12 +202,23 @@ public class RecipeService {
         return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
     }
 
-    public Optional<RecipeEntity> searchInfo(String searchText){
-        List<RecipeEntity> store = recipeRepository.findAll();
+    public Optional<RecipeEntity> searchInfo(String searchText, String nickname) throws Exception {
+        Optional<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText);
+        UserEntity userEntity = null;
+        if (!nickname.equals("noLogin")) {
 
-        return store.stream()
-                .filter(recipe -> recipe.getTitle().contains(searchText))
-                .findAny();
+            userEntity = authRepository.findByAccount(nickname)
+                    .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다. " + nickname));
+        }
+
+        SearchEntity searchEntity = SearchEntity.builder()
+                .user(userEntity)
+                .searchWord(searchText)
+                .build();
+
+        searchRepository.save(searchEntity);
+
+        return store;
     }
 
     public List<RecipeEntity> recomendInfo() {

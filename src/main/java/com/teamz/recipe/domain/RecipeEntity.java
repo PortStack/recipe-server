@@ -1,5 +1,6 @@
 package com.teamz.recipe.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,22 +27,27 @@ public class RecipeEntity extends TimeEntity{
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int likes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<RecipeIngredientEntity> recipeIngredients = new ArrayList<RecipeIngredientEntity>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<CommentEntity> comments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
     private List<CookOrder> cookOrders;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
     private List<ThumbNailEntity> themNails;
