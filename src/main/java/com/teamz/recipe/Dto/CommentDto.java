@@ -50,7 +50,7 @@ public class CommentDto {
         private final String createdDate;
         private final String modifiedDate;
         private final Long recipe_id;
-        private final Long user_id; // 작성자
+        private final String nickName; // 작성자
 
         /* Entity -> Dto*/
         public Response(CommentEntity comments) {
@@ -59,7 +59,7 @@ public class CommentDto {
             this.createdDate = comments.getCreatedDate();
             this.modifiedDate = comments.getModifiedDate();
             this.recipe_id = comments.getRecipe().getId();
-            this.user_id = comments.getUser().getId();
+            this.nickName = comments.getUser().getNickname();
         }
     }
 

@@ -39,12 +39,14 @@ public class UserController {
     }
     @PostMapping(value = "/login")
     public ResponseEntity<ResponseSingDto> Login(@RequestBody @Valid AuthDto.RequestLogin request, BindingResult bindingResult) throws Exception {
+
         if (bindingResult.hasErrors()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
 
         ResponseSingDto responseSingDto = authService.login(request);
+
 
         //refreshToken 데이터베이스 저장
         RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity.builder()
@@ -83,6 +85,7 @@ public class UserController {
     */
     @PostMapping("/refreshToken")
     public ResponseEntity requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) throws Exception {
+        System.out.println(refreshTokenDto.getRefreshToken());
         RefreshTokenEntity refreshTokenEntity = refreshTokenService.findRefreshToken(refreshTokenDto.getRefreshToken()).orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
         Claims claims = jwtProvider.parseRefreshToken(refreshTokenEntity.getValue());
 
