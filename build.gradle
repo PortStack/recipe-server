@@ -35,6 +35,10 @@ dependencies {
 	implementation 'org.json:json:20200518'
 
 	implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '2.0.2'
+
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'io.projectreactor:reactor-core:3.4.12'
+
 }
 
 tasks.named('test') {
