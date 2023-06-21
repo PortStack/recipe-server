@@ -41,7 +41,6 @@ public class RecipeController {
         RecipeEntity recipeEntity = recipeService.findById(id);
 
         if(!nickname.equals("noLogin")){
-            System.out.println(nickname);
             UserEntity userEntity = authService.findByNickname(nickname);
             if(!recipeService.findLike(id,userEntity.getId()).isEmpty()){
                 likeState = true;

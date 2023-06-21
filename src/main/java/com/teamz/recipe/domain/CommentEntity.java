@@ -1,5 +1,6 @@
 package com.teamz.recipe.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,10 +28,12 @@ public class CommentEntity {
     @LastModifiedDate
     private String modifiedDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "RECIPE_ID")
     private RecipeEntity recipe;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user; // 작성자

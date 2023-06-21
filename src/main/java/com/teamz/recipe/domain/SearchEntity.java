@@ -1,5 +1,6 @@
 package com.teamz.recipe.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,7 @@ public class SearchEntity {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private UserEntity user;
 

@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
     @Modifying
@@ -20,4 +23,8 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Modifying
     @Query("update RecipeEntity p set p.likes = p.likes + 1 where p.id = :id")
     int plusLike(@Param("id")Long id);
+
+    Optional<RecipeEntity> findByTitleContaining(String searchText);
+
+    Optional<RecipeEntity> findByTitle(String searchText);
 }
