@@ -1,6 +1,6 @@
 package com.teamz.recipe.Controller;
 
-import com.teamz.recipe.domain.Board;
+import com.teamz.recipe.domain.BoardEntity;
 import com.teamz.recipe.domain.RecipeEntity;
 import com.teamz.recipe.domain.UserEntity;
 import com.teamz.recipe.service.AuthService;
@@ -27,15 +27,15 @@ public class MainController {
         return new ResponseEntity<>(searchRecipe, HttpStatus.OK);
     }
 
-    @PostMapping("/recomend")
+    @GetMapping("/recomend")
     public ResponseEntity<List<RecipeEntity>> recomendRecipe() {
         List<RecipeEntity> recomendRecipe = recipeService.recomendInfo();
         return new ResponseEntity<>(recomendRecipe, HttpStatus.OK);
     }
 
-    @PostMapping("/topBoard")
-    public List<Board> topBoard() {
-        List<Board> topBoard = recipeService.topBoardInfo();
+    @GetMapping("/topBoard")
+    public List<BoardEntity> topBoard() {
+        List<BoardEntity> topBoard = recipeService.topBoardInfo();
         return topBoard;
     }
 }

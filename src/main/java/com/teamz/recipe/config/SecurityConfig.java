@@ -54,14 +54,22 @@ public class SecurityConfig {
                 );
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","recipe/read/*","/recipe","/images/*/*", "/main/*").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","recipe/read/*","/recipe", "recipe/comment/*/read", "board/read/*","/board", "board/comment/*/read","/images/*/*", "/main/*").permitAll()
                         .requestMatchers( "/auth/logout",
                                 "/recipe/new",
                                 "/recipe/like/*",
                                 "/recipe/*/new",
                                 "/recipe/comment/*/new",
                                 "/recipe/comment/*/update/*",
-                                "/recipe/*/comment/*").hasRole("USER"))
+                                "/recipe/comment/*/delete/*",
+                                "/recipe/*/comment/*",
+                                "/board/new",
+                                "/board/like/*",
+                                "/board/*/new",
+                                "/board/comment/*/new",
+                                "/board/comment/*/update/*",
+                                "/board/comment/*/delete/*",
+                                "/board/*/comment/*").hasRole("USER"))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JWT 인증 필터 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
