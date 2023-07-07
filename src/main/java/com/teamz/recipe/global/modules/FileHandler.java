@@ -46,12 +46,15 @@ public class FileHandler {
             throw new IllegalBlockSizeException("확장자 명이 존재하지 않음");
         }
         else {  // 확장자가 jpeg, png인 파일들만 받아서 처리
+            System.out.println("type : " +contentType);
             if(contentType.contains("image/jpeg"))
                 originalFileExtension = ".jpg";
             else if(contentType.contains("image/png"))
                 originalFileExtension = ".png";
+            else if (contentType.contains("image/*"))
+                originalFileExtension = ".png";
             else
-                throw new IllegalBlockSizeException("옳지 않은 확장자명 않음");
+                throw new IllegalBlockSizeException("옳지 않은 확장자명");
         }
 
         // 파일명 중복 피하고자 나노초까지 얻어와 지정

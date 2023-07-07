@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequestMapping("/recipe")
@@ -27,9 +29,13 @@ public class RecipeController {
     private final AuthService authService;
 
     @PostMapping("/new")
-    public ResponseEntity save(RecipeDto.Request dto, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
-//        return ResponseEntity.ok(recipeService.save(dto, user.getNickname()));
-        System.out.println(userDetails.getUsername());
+    public ResponseEntity save(@RequestPart("dto") RecipeDto.Request dto,
+                               @RequestPart("orderImage") List<MultipartFile> orderImage,
+                               @RequestPart("themNail") List<MultipartFile> themNail,
+                               @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        dto.setOrderImage(orderImage);
+        dto.setThemNail(themNail);
+        System.out.println("recipeNew : " + userDetails.getUsername());
         return ResponseEntity.ok(recipeService.save(dto));
     }
 
