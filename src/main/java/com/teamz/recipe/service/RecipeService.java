@@ -32,7 +32,7 @@ public class RecipeService {
 
     /* CREATE */
     public Long save(RecipeDto.Request recipeDto) throws Exception {
-
+        System.out.println("title : " + recipeDto.getTitle());
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다" + recipeDto.getWriter()));
 

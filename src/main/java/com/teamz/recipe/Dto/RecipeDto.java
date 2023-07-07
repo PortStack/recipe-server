@@ -25,17 +25,6 @@ public class RecipeDto {
         private List<MultipartFile> orderImage;
         private List<MultipartFile> themNail;
 
-//        /* Dto -> Entity */
-//        public RecipeEntity toEntity(){
-//            RecipeEntity recipe = RecipeEntity.builder()
-//                    .id(id)
-//                    .title(title)
-//                    .writer(writer)
-//                    .views(0)
-//                    .build();
-//
-//            return recipe;
-//        }
     }
 
     /**
