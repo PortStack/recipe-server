@@ -25,6 +25,4 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     int plusLike(@Param("id")Long id);
 
     Optional<RecipeEntity> findByTitleContaining(String searchText);
-
-    Optional<RecipeEntity> findByTitle(String searchText);
 }
