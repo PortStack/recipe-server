@@ -20,6 +20,7 @@ public class RecipeDto {
         private String title;
         private String writer;
         private String views;
+        private String tags;
         private List<RecipeIngredientDto.Request> recipeIngredients = new ArrayList<>();
         private List<CookOrderDto.Request> cookOrders = new ArrayList<>();
         private List<MultipartFile> orderImage;

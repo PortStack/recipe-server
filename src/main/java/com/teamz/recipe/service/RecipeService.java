@@ -28,9 +28,11 @@ public class RecipeService {
     private final AuthRepository authRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final FileHandler fileHandler;
+    private final TagService tagService;
 
 
     /* CREATE */
+    @Transactional
     public Long save(RecipeDto.Request recipeDto) throws Exception {
         System.out.println("title : " + recipeDto.getTitle());
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
@@ -51,6 +53,8 @@ public class RecipeService {
         saveThemNailImage(recipeDto.getThemNail(),result);
         toEntityCookOrder(cookOrdersList,recipeDto.getOrderImage(),result);
         toEntityRecipeIngredient(ingredientList, result);
+        tagService.createTagList(recipeDto.getTags(),result);
+
 
         return result.getId();
 
