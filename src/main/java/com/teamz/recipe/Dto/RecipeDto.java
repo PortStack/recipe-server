@@ -1,6 +1,7 @@
 package com.teamz.recipe.Dto;
 
 import com.teamz.recipe.domain.RecipeEntity;
+import com.teamz.recipe.domain.ThumbNailEntity;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +44,7 @@ public class RecipeDto {
         private final int views;
         private final int likes;
         private final boolean likeState;
+        private final String themNailUrl;
         private final List<CommentDto.Response> comments;
         private final List<RecipeIngredientDto.Response> ingredientList;
         private final List<CookOrderDto.Response> cookOrderList;
@@ -56,6 +58,7 @@ public class RecipeDto {
             this.views = recipes.getViews();
             this.likes = recipes.getLikes();
             this.likeState = likeState;
+            this.themNailUrl = recipes.getThemNails().get(0).getFullPath();
             this.comments = recipes.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             this.ingredientList = recipes.getRecipeIngredients().stream().map(RecipeIngredientDto.Response::new).collect(Collectors.toList());
             this.cookOrderList = recipes.getCookOrders().stream().map(CookOrderDto.Response::new).collect(Collectors.toList());

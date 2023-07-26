@@ -59,10 +59,11 @@ public class FileHandler {
 
         // 파일명 중복 피하고자 나노초까지 얻어와 지정
         String new_file_name = absolutePath + path + File.separator + System.nanoTime() + originalFileExtension;
+        String save_name = File.separator + System.nanoTime() + originalFileExtension;
 
         ImageFile = Image.builder()
                 .originFileName(multipartFile.getOriginalFilename())
-                .fullPath(new_file_name)
+                .fullPath(save_name)
                 .fileSize(multipartFile.getSize())
                 .build();
 
