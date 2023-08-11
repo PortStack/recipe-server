@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 @RequiredArgsConstructor
 @Service
 public class RecipeService {
@@ -203,12 +205,12 @@ public class RecipeService {
         return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
     }
 
-    public Optional<RecipeEntity> searchInfo(String searchText){
-        List<RecipeEntity> store = recipeRepository.findAll();
+    public List<RecipeEntity> searchInfo(String searchText){
+        List<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText);
 
-        return store.stream()
-                .filter(recipe -> recipe.getTitle().contains(searchText))
-                .findAny();
+        System.out.println(store.get(0).getTitle());
+
+        return store;
     }
 
     public List<RecipeEntity> recomendInfo() {

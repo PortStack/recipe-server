@@ -35,14 +35,14 @@ public class RecipeController {
                                @AuthenticationPrincipal UserDetails userDetails) throws Exception {
         dto.setOrderImage(orderImage);
         dto.setThemNail(themNail);
-        System.out.println("recipeNew : " + userDetails.getUsername());
+
         return ResponseEntity.ok(recipeService.save(dto));
     }
 
     @GetMapping("/read/{id}")
     public ResponseEntity read(@PathVariable Long id,@RequestParam(value = "nickname" , required = false, defaultValue="noLogin") String nickname) throws Exception {
         boolean likeState = false;
-
+        System.out.println("readTest");
         recipeService.updateView(id);
         RecipeEntity recipeEntity = recipeService.findById(id);
 
