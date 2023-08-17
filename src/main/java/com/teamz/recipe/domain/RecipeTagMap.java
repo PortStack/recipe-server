@@ -18,9 +18,9 @@ public class RecipeTagMap extends TimeEntity{
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "recipe_id")
-    private RecipeEntity recipeEntity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RECIPE_ID")
+    private RecipeEntity recipe;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "tag_id")

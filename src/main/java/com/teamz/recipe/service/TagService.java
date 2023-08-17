@@ -43,7 +43,7 @@ public class TagService {
             Tag findResult = tagRepository.findByName(tag).orElseGet(()-> saveTag(tag));
 
             RecipeTagMap recipeTagMap = RecipeTagMap.builder()
-                    .recipeEntity(recipe)
+                    .recipe(recipe)
                     .tag(findResult)
                     .build();
 
