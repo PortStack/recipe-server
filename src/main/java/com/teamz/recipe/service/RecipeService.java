@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 @RequiredArgsConstructor
 @Service
 public class RecipeService {
@@ -31,9 +33,11 @@ public class RecipeService {
     private final AuthRepository authRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final FileHandler fileHandler;
+    private final TagService tagService;
 
 
     /* CREATE */
+    @Transactional
     public Long save(RecipeDto.Request recipeDto) throws Exception {
         System.out.println("title : " + recipeDto.getTitle());
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
@@ -56,6 +60,8 @@ public class RecipeService {
         saveThemNailImage(recipeDto.getThemNail(),result);
         toEntityCookOrder(cookOrdersList,recipeDto.getOrderImage(),result);
         toEntityRecipeIngredient(ingredientList, result);
+        tagService.createTagList(recipeDto.getTags(),result);
+
 
         return result.getId();
 
@@ -204,22 +210,10 @@ public class RecipeService {
         return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
     }
 
-    public Optional<RecipeEntity> searchInfo(String searchText, String nickname) throws Exception {
-        Optional<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText);
-        UserEntity userEntity = null;
-        if (!nickname.equals("noLogin")) {
+    public List<RecipeEntity> searchInfo(String searchText){
+        List<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText);
 
-            userEntity = authRepository.findByAccount(nickname)
-                    .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다. " + nickname));
-        }
-
-        SearchEntity searchEntity = SearchEntity.builder()
-                .user(userEntity)
-                .searchWord(searchText)
-                .build();
-
-        searchRepository.save(searchEntity);
-
+        System.out.println(store.get(0).getTitle());
         return store;
     }
 

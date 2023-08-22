@@ -1,5 +1,6 @@
 package com.teamz.recipe.Controller;
 
+import com.teamz.recipe.Dto.RecipeDto;
 import com.teamz.recipe.domain.BoardEntity;
 import com.teamz.recipe.domain.RecipeEntity;
 import com.teamz.recipe.domain.UserEntity;

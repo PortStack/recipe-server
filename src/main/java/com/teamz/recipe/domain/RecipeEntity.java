@@ -28,7 +28,7 @@ public class RecipeEntity extends TimeEntity{
     private int likes;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
@@ -52,20 +52,25 @@ public class RecipeEntity extends TimeEntity{
     @OrderBy("id asc")
     private List<ThumbNailEntity> themNails;
 
-    public void addCookOrders(CookOrder cookOrder){
-        this.cookOrders.add(cookOrder);
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc")
+    private List<RecipeTagMap> recipeTagMaps;
 
-        if(cookOrder.getRecipe() != this){
-            cookOrder.setRecipe(this);
-        }
-    }
-
-    public void addRecipeIngredients(RecipeIngredientEntity recipeIngredient){
-        this.recipeIngredients.add(recipeIngredient);
-
-        if(recipeIngredient.getRecipe() != this){
-            recipeIngredient.setRecipe(this);
-        }
-    }
+//    public void addCookOrders(CookOrder cookOrder){
+//        this.cookOrders.add(cookOrder);
+//
+//        if(cookOrder.getRecipe() != this){
+//            cookOrder.setRecipe(this);
+//        }
+//    }
+//
+//    public void addRecipeIngredients(RecipeIngredientEntity recipeIngredient){
+//        this.recipeIngredients.add(recipeIngredient);
+//
+//        if(recipeIngredient.getRecipe() != this){
+//            recipeIngredient.setRecipe(this);
+//        }
+//    }
 
 }
