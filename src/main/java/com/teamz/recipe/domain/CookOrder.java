@@ -1,5 +1,6 @@
 package com.teamz.recipe.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,12 @@ public class CookOrder {
     @Column(nullable = false)
     private String content;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "COOK_ORDER_IMAGE_ID")
     private CookOrderImage cookOrderImage;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RECIPE_ID")
     private RecipeEntity recipe;

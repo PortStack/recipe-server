@@ -2,29 +2,20 @@ package com.teamz.recipe.config;
 
 import com.teamz.recipe.global.jwt.JwtAuthenticationFilter;
 import com.teamz.recipe.global.jwt.JwtProvider;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.io.IOException;
 import java.util.List;
 
 @Configuration
@@ -63,14 +54,22 @@ public class SecurityConfig {
                 );
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","/recipe/read/*","/recipe","/images/*/*","/main/*").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","recipe/read/*","/recipe", "recipe/comment/*/read", "board/read/*","/board", "board/comment/*/read","/images/*/*", "/main/*").permitAll()
                         .requestMatchers( "/auth/logout",
                                 "/recipe/new",
                                 "/recipe/like/*",
                                 "/recipe/*/new",
                                 "/recipe/comment/*/new",
                                 "/recipe/comment/*/update/*",
-                                "/recipe/*/comment/*").hasRole("USER"))
+                                "/recipe/comment/*/delete/*",
+                                "/recipe/*/comment/*",
+                                "/board/new",
+                                "/board/like/*",
+                                "/board/*/new",
+                                "/board/comment/*/new",
+                                "/board/comment/*/update/*",
+                                "/board/comment/*/delete/*",
+                                "/board/*/comment/*").hasRole("USER"))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JWT 인증 필터 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);

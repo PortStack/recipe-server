@@ -2,7 +2,10 @@ package com.teamz.recipe.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -10,15 +13,15 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name="COMMENTS")
+@Table(name="BOARD_COMMENTS")
 @Entity
-public class CommentEntity {
+public class BoardCommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String comment; // 댓글 내용
+    private String comment;
 
     @Column(name = "created_date")
     @CreatedDate
@@ -30,8 +33,8 @@ public class CommentEntity {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "RECIPE_ID")
-    private RecipeEntity recipe;
+    @JoinColumn(name = "BOARD_ID")
+    private BoardEntity board;
 
     @JsonIgnore
     @ManyToOne
@@ -41,20 +44,4 @@ public class CommentEntity {
     public void update(String comment){
         this.comment = comment;
     }
-
 }
-
-//    private Long id; // 댓글 id
-//    private String bno; //댓글이 속한 게시글 번호
-//    private String cno; //댓글 번호
-//    private String writer; //댓글 작성자
-//    private String comment; //댓글 내용
-//    @Column(name = "created_date")
-//    @CreatedDate
-//    private String createdDate;
-//
-//    @Column(name = "modified_date")
-//    @LastModifiedDate
-//    private String modifiedDate;
-//    private int cDepth; //댓글 깊이
-//    private int cGroup; //댓글 그룹
