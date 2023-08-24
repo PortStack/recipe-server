@@ -1,5 +1,7 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
+import com.teamz.recipe.domain.UserEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

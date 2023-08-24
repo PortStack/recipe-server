@@ -1,11 +1,12 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
+import com.teamz.recipe.domain.UserEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ManyToAny;
 
 @Builder
 @AllArgsConstructor

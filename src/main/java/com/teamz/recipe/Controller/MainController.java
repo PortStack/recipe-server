@@ -2,7 +2,7 @@ package com.teamz.recipe.Controller;
 
 import com.teamz.recipe.Dto.RecipeDto;
 import com.teamz.recipe.domain.Board;
-import com.teamz.recipe.domain.RecipeEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import com.teamz.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/main")
 @RequiredArgsConstructor

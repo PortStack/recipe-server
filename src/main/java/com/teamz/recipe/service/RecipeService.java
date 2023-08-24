@@ -4,6 +4,7 @@ import com.teamz.recipe.Dto.CookOrderDto;
 import com.teamz.recipe.Dto.RecipeDto;
 import com.teamz.recipe.Dto.RecipeIngredientDto;
 import com.teamz.recipe.domain.*;
+import com.teamz.recipe.domain.recipe.*;
 import com.teamz.recipe.global.modules.FileHandler;
 import com.teamz.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 @RequiredArgsConstructor
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final BoardRepository boardRepository;
+    private final TagRepository tagRepository;
     private final CookOrderRepository cookOrderRepository;
     private final CookOrderImageRepository cookOrderImageRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
@@ -82,6 +82,11 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public Page<RecipeEntity> pageList(Pageable pageable) {
         return recipeRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Tag> getCategories(Pageable pageable) {
+        return tagRepository.findAll(pageable);
     }
 
     public void saveThemNailImage(List<MultipartFile> themNailImages, RecipeEntity recipe) throws Exception {
@@ -236,6 +241,8 @@ public class RecipeService {
 
         return resultBoard;
     }
+
+
 }
 
 class BoardLikeComparator implements Comparator<Board> {

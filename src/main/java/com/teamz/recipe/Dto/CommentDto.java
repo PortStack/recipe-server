@@ -1,8 +1,7 @@
 package com.teamz.recipe.Dto;
 
-import com.teamz.recipe.domain.CommentEntity;
-import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.User;
+import com.teamz.recipe.domain.recipe.CommentEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import com.teamz.recipe.domain.UserEntity;
 import lombok.*;
 

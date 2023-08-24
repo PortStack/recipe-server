@@ -1,15 +1,12 @@
 package com.teamz.recipe.repository;
 
-import com.teamz.recipe.domain.Recipe;
-import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.RecipeLikeEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 

@@ -1,13 +1,10 @@
 package com.teamz.recipe.service;
 
-import com.teamz.recipe.Dto.RecipeDto;
-import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.RecipeTagMap;
-import com.teamz.recipe.domain.Tag;
-import com.teamz.recipe.repository.CookOrderImageRepository;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
+import com.teamz.recipe.domain.recipe.RecipeTagMap;
+import com.teamz.recipe.domain.recipe.Tag;
 import com.teamz.recipe.repository.TagMapRepository;
 import com.teamz.recipe.repository.TagRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
