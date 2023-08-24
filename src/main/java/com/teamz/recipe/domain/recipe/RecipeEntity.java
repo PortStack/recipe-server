@@ -1,6 +1,7 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.teamz.recipe.domain.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name="RECIPES")
-public class RecipeEntity extends TimeEntity{
+public class RecipeEntity extends TimeEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;

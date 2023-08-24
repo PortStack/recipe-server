@@ -1,9 +1,7 @@
 package com.teamz.recipe.Dto;
 
-import com.teamz.recipe.domain.CommentEntity;
-import com.teamz.recipe.domain.CookOrder;
+import com.teamz.recipe.domain.recipe.CookOrder;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 public class CookOrderDto {
 

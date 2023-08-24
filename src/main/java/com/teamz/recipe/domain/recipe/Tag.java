@@ -1,5 +1,6 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
+import com.teamz.recipe.domain.TimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "tag")
-public class Tag extends TimeEntity{
+public class Tag extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

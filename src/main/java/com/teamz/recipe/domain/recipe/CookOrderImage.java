@@ -1,5 +1,6 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
+import com.teamz.recipe.domain.recipe.CookOrder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

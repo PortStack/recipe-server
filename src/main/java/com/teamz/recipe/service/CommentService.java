@@ -1,8 +1,8 @@
 package com.teamz.recipe.service;
 
 import com.teamz.recipe.Dto.CommentDto;
-import com.teamz.recipe.domain.CommentEntity;
-import com.teamz.recipe.domain.RecipeEntity;
+import com.teamz.recipe.domain.recipe.CommentEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import com.teamz.recipe.domain.UserEntity;
 import com.teamz.recipe.repository.AuthRepository;
 import com.teamz.recipe.repository.CommentRepository;

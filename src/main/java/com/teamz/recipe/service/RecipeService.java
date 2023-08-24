@@ -4,7 +4,7 @@ import com.teamz.recipe.Dto.CookOrderDto;
 import com.teamz.recipe.Dto.RecipeDto;
 import com.teamz.recipe.Dto.RecipeIngredientDto;
 import com.teamz.recipe.domain.*;
-import com.teamz.recipe.global.modules.BoardLikeComparator;
+import com.teamz.recipe.domain.recipe.*;
 import com.teamz.recipe.global.modules.FileHandler;
 import com.teamz.recipe.global.modules.RecipeLikeComparator;
 import com.teamz.recipe.repository.*;
@@ -17,14 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 @RequiredArgsConstructor
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final SearchRepository searchRepository;
     private final BoardRepository boardRepository;
+    private final TagRepository tagRepository;
     private final CookOrderRepository cookOrderRepository;
     private final CookOrderImageRepository cookOrderImageRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
@@ -87,6 +86,11 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public Page<RecipeEntity> pageList(Pageable pageable) {
         return recipeRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Tag> getCategories(Pageable pageable) {
+        return tagRepository.findAll(pageable);
     }
 
     public void saveThemNailImage(List<MultipartFile> themNailImages, RecipeEntity recipe) throws Exception {
@@ -234,20 +238,47 @@ public class RecipeService {
         return resultRecipe;
     }
 
-    public List<BoardEntity> topBoardInfo() {
-        List<BoardEntity> store = boardRepository.findAll();
-        List<BoardEntity> resultBoard = new ArrayList<BoardEntity>();
-        store.sort(new BoardLikeComparator().reversed());
-        int store_length = store.size();
+//    public List<BoardEntity> topBoardInfo() {
+//        List<BoardEntity> store = boardRepository.findAll();
+//        List<BoardEntity> resultBoard = new ArrayList<BoardEntity>();
+//        store.sort(new BoardLikeComparator().reversed());
+//        int store_length = store.size();
+//
+//        if(store_length>=6){
+//            store_length = 6;
+//        }
+//
+//        for(int i=0;i<store_length;i++){
+//            resultBoard.add(store.get(i));
+//        }
+//
+//        return resultBoard;
+//    }
+//<<<<<<< HEAD
 
-        if(store_length>=6){
-            store_length = 6;
-        }
 
-        for(int i=0;i<store_length;i++){
-            resultBoard.add(store.get(i));
-        }
-
-        return resultBoard;
-    }
 }
+
+//class BoardLikeComparator implements Comparator<Board> {
+//    @Override
+//    public int compare(Board b1, Board b2) {
+//        if (b1.getLikes() > b2.getLikes()) {
+//            return 1;
+//        } else if (b1.getLikes() < b2.getLikes()) {
+//            return -1;
+//        }
+//        return 0;
+//    }
+//}
+//
+//class RecipeLikeComparator implements Comparator<RecipeEntity> {
+//    @Override
+//    public int compare(RecipeEntity r1, RecipeEntity r2) {
+//        if (r1.getLikes() > r2.getLikes()) {
+//            return 1;
+//        } else if (r1.getLikes() < r2.getLikes()) {
+//            return -1;
+//        }
+//        return 0;
+//    }
+//}

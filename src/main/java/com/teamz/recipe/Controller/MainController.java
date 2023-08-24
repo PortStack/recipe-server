@@ -1,10 +1,12 @@
 package com.teamz.recipe.Controller;
 
 import com.teamz.recipe.Dto.RecipeDto;
-import com.teamz.recipe.domain.BoardEntity;
-import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.UserEntity;
-import com.teamz.recipe.service.AuthService;
+import com.teamz.recipe.domain.Board;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
+//import com.teamz.recipe.domain.BoardEntity;
+//import com.teamz.recipe.domain.RecipeEntity;
+//import com.teamz.recipe.domain.UserEntity;
+//import com.teamz.recipe.service.AuthService;
 import com.teamz.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +24,9 @@ public class MainController {
     private final RecipeService recipeService;
 
     @GetMapping("/search")
-    public ResponseEntity<Optional<RecipeEntity>> search(@RequestParam String searchText, @RequestParam(value = "nickname" , required = false, defaultValue="noLogin") String nickname) throws Exception {
+    public ResponseEntity<List<RecipeEntity>> search(@RequestParam String searchText, @RequestParam(value = "nickname" , required = false, defaultValue="noLogin") String nickname) throws Exception {
         System.out.println(searchText);
-        Optional<RecipeEntity> searchRecipe = recipeService.searchInfo(searchText, nickname);
+        List<RecipeEntity> searchRecipe = recipeService.searchInfo(searchText);
         return new ResponseEntity<>(searchRecipe, HttpStatus.OK);
     }
 
@@ -34,9 +36,9 @@ public class MainController {
         return new ResponseEntity<>(recomendRecipe, HttpStatus.OK);
     }
 
-    @GetMapping("/topBoard")
-    public List<BoardEntity> topBoard() {
-        List<BoardEntity> topBoard = recipeService.topBoardInfo();
-        return topBoard;
-    }
+//    @GetMapping("/topBoard")
+//    public List<BoardEntity> topBoard() {
+//        List<BoardEntity> topBoard = recipeService.topBoardInfo();
+//        return topBoard;
+//    }
 }

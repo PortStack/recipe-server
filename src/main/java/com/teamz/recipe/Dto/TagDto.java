@@ -1,6 +1,6 @@
 package com.teamz.recipe.Dto;
 
-import com.teamz.recipe.domain.RecipeTagMap;
+import com.teamz.recipe.domain.recipe.RecipeTagMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

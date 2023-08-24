@@ -1,8 +1,6 @@
 package com.teamz.recipe.repository;
 
-import com.teamz.recipe.domain.CommentEntity;
-import com.teamz.recipe.domain.Tag;
-import com.teamz.recipe.domain.UserEntity;
+import com.teamz.recipe.domain.recipe.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

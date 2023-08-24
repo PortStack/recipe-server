@@ -1,6 +1,7 @@
 package com.teamz.recipe.global.modules;
 
-import com.teamz.recipe.domain.RecipeEntity;
+
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 
 import java.util.Comparator;
 

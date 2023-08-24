@@ -1,8 +1,6 @@
 package com.teamz.recipe.Dto;
 
-import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.Tag;
-import com.teamz.recipe.domain.ThumbNailEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,7 +47,7 @@ public class RecipeDto {
         private final List<CommentDto.Response> comments;
         private final List<RecipeIngredientDto.Response> ingredientList;
         private final List<CookOrderDto.Response> cookOrderList;
-//        private final List<TagDto.Response> tags;
+        private final List<TagDto.Response> tags;
 
         public Response(RecipeEntity recipes,boolean likeState){
             this.id = recipes.getId();
@@ -64,7 +62,7 @@ public class RecipeDto {
             this.comments = recipes.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
             this.ingredientList = recipes.getRecipeIngredients().stream().map(RecipeIngredientDto.Response::new).collect(Collectors.toList());
             this.cookOrderList = recipes.getCookOrders().stream().map(CookOrderDto.Response::new).collect(Collectors.toList());
-//            this.tags = recipes.getTagMaps().stream().map(TagDto.Response::new).collect(Collectors.toList());
+            this.tags = recipes.getRecipeTagMaps().stream().map(TagDto.Response::new).collect(Collectors.toList());
         }
     }
 }

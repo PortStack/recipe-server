@@ -1,4 +1,4 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

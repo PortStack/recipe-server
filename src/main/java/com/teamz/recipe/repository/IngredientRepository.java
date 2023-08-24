@@ -1,6 +1,6 @@
 package com.teamz.recipe.repository;
 
-import com.teamz.recipe.domain.Ingredient;
+import com.teamz.recipe.domain.recipe.Ingredient;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

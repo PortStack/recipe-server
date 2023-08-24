@@ -1,6 +1,6 @@
 package com.teamz.recipe.Dto;
 
-import com.teamz.recipe.domain.RecipeIngredientEntity;
+import com.teamz.recipe.domain.recipe.RecipeIngredientEntity;
 import lombok.*;
 
 public class RecipeIngredientDto {

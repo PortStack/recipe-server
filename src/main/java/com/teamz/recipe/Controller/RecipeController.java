@@ -2,8 +2,7 @@ package com.teamz.recipe.Controller;
 
 
 import com.teamz.recipe.Dto.RecipeDto;
-import com.teamz.recipe.domain.RecipeEntity;
-import com.teamz.recipe.domain.RecipeLikeEntity;
+import com.teamz.recipe.domain.recipe.RecipeEntity;
 import com.teamz.recipe.domain.UserEntity;
 import com.teamz.recipe.service.AuthService;
 import com.teamz.recipe.service.RecipeService;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/recipe")
 @RequiredArgsConstructor
@@ -77,6 +75,12 @@ public class RecipeController {
     @GetMapping("/like/{idx}")
     public ResponseEntity like(@PathVariable Long idx,@AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(recipeService.saveLike(idx,userDetails.getUsername()));
+    }
+
+    @GetMapping("category")
+    public ResponseEntity category(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<RecipeEntity> posts = recipeService.pageList(pageable);
+        return ResponseEntity.ok(posts.map(m -> new RecipeDto.Response(m,false)));
     }
 
 }

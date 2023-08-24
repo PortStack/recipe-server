@@ -1,5 +1,6 @@
-package com.teamz.recipe.domain;
+package com.teamz.recipe.domain.recipe;
 
+import com.teamz.recipe.domain.TimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "RecipeTagMap")
-public class RecipeTagMap extends TimeEntity{
+public class RecipeTagMap extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
