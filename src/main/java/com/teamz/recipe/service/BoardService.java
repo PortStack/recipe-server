@@ -1,83 +1,97 @@
 package com.teamz.recipe.service;
 
-import com.teamz.recipe.domain.Board;
-import com.teamz.recipe.global.modules.CurrentDateTime;
+import com.sun.tools.jconsole.JConsoleContext;
+import com.teamz.recipe.Dto.BoardDto;
+import com.teamz.recipe.domain.*;
+import com.teamz.recipe.repository.AuthRepository;
+import com.teamz.recipe.repository.BoardLikeRepository;
 import com.teamz.recipe.repository.BoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
+@Service
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    public static CurrentDateTime currentDateTime = new CurrentDateTime();
-
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
-
+    private final BoardLikeRepository boardLikeRepository;
+    private final AuthRepository authRepository;
     /*
     * 새 게시글 셋팅
     * */
-    private Board setNewBoard(Board board){
-        int lastIdx = boardRepository.storeSize();
-        String now = currentDateTime.getCurrentDateTime();
-        board.setBno(lastIdx);
-        board.setCreateDate(now);
-        board.setModifiedDate(now);
+    public Long save(BoardDto.Request boardDto) throws Exception {
+        UserEntity user = authRepository.findByNickname(boardDto.getWriter()).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 존재하지 않습니다" + boardDto.getWriter()));
+
+        System.out.println("content: " + boardDto.getContent());
+
+        BoardEntity board = BoardEntity.builder()
+                .title(boardDto.getTitle())
+                .tag(boardDto.getTag())
+                .user(user)
+                .content(boardDto.getContent())
+                .views(0)
+                .likes(0)
+                .boardThumbImg(boardDto.getBoardThumbImg())
+                .build();
+
+        BoardEntity result = boardRepository.save(board);
+
+        return result.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public BoardEntity findById(Long id) {
+        BoardEntity board = boardRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id: " + id));
+
         return board;
     }
 
-    /*
-    * 게시글 존재 유무 검색
-    * */
-    private void isBoard(Optional<Board> board){
-        if (board.isEmpty()){
-            throw new IllegalStateException("게시글이 존재하지 않습니다");
+    @Transactional
+    public int updateView(Long id) {
+        return boardRepository.updateView(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardEntity> pageList(Pageable pageable) {
+        return boardRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public boolean saveLike(Long boardID, String account){
+        //아이디 검색
+        UserEntity user = authRepository.findByAccount(account).orElseThrow(() ->
+                new IllegalArgumentException("해당 아이다가 존재하지 않습니다. nickName: " + account));
+
+        //좋아요 기록 검색
+        Optional<BoardLikeEntity> findLike = findLike(boardID, user.getId());
+
+        if(findLike.isEmpty()){
+            BoardEntity board = boardRepository.findById(boardID).orElseThrow(() ->
+                    new IllegalArgumentException("해당 글이 존재하지 않습니다. boardID: " + boardID));
+
+            BoardLikeEntity boardLikeEntity = BoardLikeEntity.builder()
+                    .board(board)
+                    .user(user)
+                    .build();
+
+            boardLikeRepository.save(boardLikeEntity);
+            boardRepository.plusLike(boardID);
+            return true;
+        }else{
+            boardLikeRepository.deleteByBoard_IdAndUser_Id(boardID, user.getId());
+            boardRepository.minusLike(boardID);
+            return false;
         }
     }
 
-    /*
-    *  게시글 생성
-    * */
-    public int writeBoard(Board board){
-        Board newBoard = setNewBoard(board);
-        boardRepository.saveBoard(newBoard);
-        return newBoard.getBno();
-    }
-
-    /*
-    * 게시글 수정
-    * */
-    public boolean updateBoard(Board board){
-        Optional<Board> preBoard = boardRepository.bulletinBoardDetails(board.getBno());
-        isBoard(preBoard);
-        boardRepository.updateBoard(board);
-        return true;
-    }
-
-    /*
-    * 게시글 상세정보 보기
-    * */
-    public Board bulletinBoardDetail(Board board){
-        Optional<Board> boardDetail = boardRepository.bulletinBoardDetails(board.getBno());
-        isBoard(boardDetail);
-        return boardDetail.get();
-    }
-
-    public List<Board> searchBoardByTitle(String title){
-        Optional<Board> boardList = boardRepository.findBoardTitle(title);
-        isBoard(boardList);
-        return boardList.stream().toList();
-    }
-
-    public List<Board> searchBoardByWritter(String writter){
-        Optional<Board> boardList = boardRepository.findBoardTitle(writter);
-        isBoard(boardList);
-        return boardList.stream().toList();
-    }
-
-    public List<Board> getPageBoardList(int pageNum){
-        return boardRepository.findTenBoard(pageNum);
+    public Optional<BoardLikeEntity> findLike(Long boardId, Long userID){
+        return boardLikeRepository.findByBoard_IdAndUser_Id(boardId, userID);
     }
 }

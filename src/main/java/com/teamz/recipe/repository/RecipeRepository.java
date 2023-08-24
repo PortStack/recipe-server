@@ -22,4 +22,6 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Modifying
     @Query("update RecipeEntity p set p.likes = p.likes + 1 where p.id = :id")
     int plusLike(@Param("id")Long id);
+
+//    List<RecipeEntity> findByTitleContaining(String searchText);
 }

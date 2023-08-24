@@ -6,6 +6,7 @@ import com.teamz.recipe.Dto.RecipeIngredientDto;
 import com.teamz.recipe.domain.*;
 import com.teamz.recipe.domain.recipe.*;
 import com.teamz.recipe.global.modules.FileHandler;
+import com.teamz.recipe.global.modules.RecipeLikeComparator;
 import com.teamz.recipe.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.*;
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
+    private final SearchRepository searchRepository;
     private final BoardRepository boardRepository;
     private final TagRepository tagRepository;
     private final CookOrderRepository cookOrderRepository;
@@ -39,6 +41,8 @@ public class RecipeService {
         System.out.println("title : " + recipeDto.getTitle());
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다" + recipeDto.getWriter()));
+
+        System.out.println("닉네임:"+user.getNickname());
 
         RecipeEntity recipe = RecipeEntity.builder()
                 .id(recipeDto.getId())
@@ -214,7 +218,6 @@ public class RecipeService {
         List<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText);
 
         System.out.println(store.get(0).getTitle());
-
         return store;
     }
 
@@ -222,49 +225,60 @@ public class RecipeService {
         List<RecipeEntity> store = recipeRepository.findAll();
         List<RecipeEntity> resultRecipe = new ArrayList<RecipeEntity>();
         store.sort(new RecipeLikeComparator().reversed());
+        int store_length = store.size();
 
-        for(int i=0;i<6;i++){
+        if(store_length>=6){
+            store_length = 6;
+        }
+
+        for(int i=0;i<store_length;i++){
             resultRecipe.add(store.get(i));
         }
 
         return resultRecipe;
     }
 
-    public List<Board> topBoardInfo() {
-        List<Board> store = boardRepository.findAll();
-        List<Board> resultBoard = new ArrayList<Board>();
-        store.sort(new BoardLikeComparator().reversed());
-
-        for(int i=0;i<4;i++){
-            resultBoard.add(store.get(i));
-        }
-
-        return resultBoard;
-    }
+//    public List<BoardEntity> topBoardInfo() {
+//        List<BoardEntity> store = boardRepository.findAll();
+//        List<BoardEntity> resultBoard = new ArrayList<BoardEntity>();
+//        store.sort(new BoardLikeComparator().reversed());
+//        int store_length = store.size();
+//
+//        if(store_length>=6){
+//            store_length = 6;
+//        }
+//
+//        for(int i=0;i<store_length;i++){
+//            resultBoard.add(store.get(i));
+//        }
+//
+//        return resultBoard;
+//    }
+//<<<<<<< HEAD
 
 
 }
 
-class BoardLikeComparator implements Comparator<Board> {
-    @Override
-    public int compare(Board b1, Board b2) {
-        if (b1.getLikes() > b2.getLikes()) {
-            return 1;
-        } else if (b1.getLikes() < b2.getLikes()) {
-            return -1;
-        }
-        return 0;
-    }
-}
-
-class RecipeLikeComparator implements Comparator<RecipeEntity> {
-    @Override
-    public int compare(RecipeEntity r1, RecipeEntity r2) {
-        if (r1.getLikes() > r2.getLikes()) {
-            return 1;
-        } else if (r1.getLikes() < r2.getLikes()) {
-            return -1;
-        }
-        return 0;
-    }
-}
+//class BoardLikeComparator implements Comparator<Board> {
+//    @Override
+//    public int compare(Board b1, Board b2) {
+//        if (b1.getLikes() > b2.getLikes()) {
+//            return 1;
+//        } else if (b1.getLikes() < b2.getLikes()) {
+//            return -1;
+//        }
+//        return 0;
+//    }
+//}
+//
+//class RecipeLikeComparator implements Comparator<RecipeEntity> {
+//    @Override
+//    public int compare(RecipeEntity r1, RecipeEntity r2) {
+//        if (r1.getLikes() > r2.getLikes()) {
+//            return 1;
+//        } else if (r1.getLikes() < r2.getLikes()) {
+//            return -1;
+//        }
+//        return 0;
+//    }
+//}

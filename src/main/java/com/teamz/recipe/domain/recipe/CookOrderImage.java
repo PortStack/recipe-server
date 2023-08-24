@@ -1,6 +1,7 @@
 package com.teamz.recipe.domain.recipe;
 
 import com.teamz.recipe.domain.recipe.CookOrder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class CookOrderImage{
     @Column(nullable = false)
     private String fullPath;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "cookOrderImage")
     private CookOrder cookOrder;
 
