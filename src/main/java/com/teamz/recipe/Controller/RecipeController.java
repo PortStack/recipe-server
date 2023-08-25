@@ -27,7 +27,7 @@ public class RecipeController {
     private final AuthService authService;
 
     @PostMapping("/new")
-    public ResponseEntity save(@RequestPart("dto") RecipeDto.Request dto,
+    public ResponseEntity save(RecipeDto.Request dto,
                                @RequestPart("orderImage") List<MultipartFile> orderImage,
                                @RequestPart("themNail") List<MultipartFile> themNail,
                                @AuthenticationPrincipal UserDetails userDetails) throws Exception {
@@ -83,4 +83,9 @@ public class RecipeController {
         return ResponseEntity.ok(posts.map(m -> new RecipeDto.Response(m,false)));
     }
 
+    @GetMapping("delete/{idx}")
+    public ResponseEntity delete(@PathVariable Long idx,@AuthenticationPrincipal UserDetails userDetails){
+        boolean result = recipeService.delete(idx,userDetails.getUsername());
+        return ResponseEntity.ok(result);
+    }
 }

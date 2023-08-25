@@ -25,6 +25,7 @@ public class TagService {
         List<String> tagList = new ArrayList<>();
 
         while (mat.find()) {
+            System.out.println(mat.group(1));
             tagList.add(mat.group(1));
         }
 
@@ -53,9 +54,12 @@ public class TagService {
 
     //태그 테이블에 태그 추가
     public Tag saveTag(String tag){
-        return Tag.builder()
+
+        Tag newTag = tagRepository.save(Tag.builder()
                 .name(tag)
-                .build();
+                .build());
+
+        return newTag;
     }
 
 }

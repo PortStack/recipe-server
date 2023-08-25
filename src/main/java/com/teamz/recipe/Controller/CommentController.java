@@ -20,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     /* CREATE */
-    @PostMapping("/{recipeId}/new")
+    @PostMapping("/new/{recipeId}")
     public ResponseEntity save(@PathVariable Long recipeId, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails){
         System.out.println(recipeId);
         System.out.println((userDetails.getUsername()));

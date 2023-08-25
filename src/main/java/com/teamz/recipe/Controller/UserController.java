@@ -10,6 +10,7 @@ import com.teamz.recipe.repository.AuthRepository;
 import com.teamz.recipe.service.AuthService;
 import com.teamz.recipe.service.RefreshTokenService;
 import io.jsonwebtoken.Claims;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,14 +79,17 @@ public class UserController {
 //        return new ResponseEntity<>( authService.getUser(account), HttpStatus.OK);
 //    }
 
+
+    //Controller에 너무 많이 처리를 해둠, 서비스로 다 옮겨야 함
     /*
    1. 전달받은 유저의 아이디로 유저가 존재하는지 확인한다.
    2. RefreshToken이 유효한지 체크한다.
-   3. AccessToken을 발급하여 기존 RefreshToken과 함께 응답한다.
+   3. AccessToken을 발급하여 RefreshToken과 함께 응답한다.
     */
+
+    @Transactional
     @PostMapping("/refreshToken")
     public ResponseEntity requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) throws Exception {
-        System.out.println(refreshTokenDto.getRefreshToken());
         RefreshTokenEntity refreshTokenEntity = refreshTokenService.findRefreshToken(refreshTokenDto.getRefreshToken()).orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
         Claims claims = jwtProvider.parseRefreshToken(refreshTokenEntity.getValue());
 
@@ -96,10 +100,23 @@ public class UserController {
         List role = (List) claims.get("roles");
         String account = claims.getSubject();
 
+
         String accessToken = jwtProvider.createAccessToken(account, userId, role);
+        String refreshToken = jwtProvider.createAccessToken(account, userId, role);
+
+        //refreshToken 데이터베이스 저장
+        RefreshTokenEntity newRefreshTokenEntity = RefreshTokenEntity.builder()
+                .memberId(responseSingDto.getId())
+                .value(refreshToken)
+                .build();
+
+        //기존 refresh Token 삭제
+        refreshTokenService.deleteRefreshToken(refreshTokenDto);
+        //
+        refreshTokenService.addRefreshToken(newRefreshTokenEntity);
 
         responseSingDto.setAccessToken(accessToken);
-        responseSingDto.setRefreshToken(refreshTokenDto.getRefreshToken());
+        responseSingDto.setRefreshToken(refreshToken);
 
         return new ResponseEntity(responseSingDto, HttpStatus.OK);
     }
@@ -107,7 +124,6 @@ public class UserController {
     @DeleteMapping("/logout")
     public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto){
         refreshTokenService.deleteRefreshToken(refreshTokenDto);
-        System.out.println("test");
         return new ResponseEntity(HttpStatus.OK);
     }
 
