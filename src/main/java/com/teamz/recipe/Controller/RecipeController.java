@@ -42,7 +42,6 @@ public class RecipeController {
     @GetMapping("/read/{id}")
     public ResponseEntity read(@PathVariable Long id,@RequestParam(value = "nickname" , required = false, defaultValue="noLogin") String nickname) throws Exception {
         boolean likeState = false;
-        System.out.println("readTest");
         recipeService.updateView(id);
         RecipeEntity recipeEntity = recipeService.findById(id);
 
@@ -60,9 +59,11 @@ public class RecipeController {
     }
 
     @GetMapping
-    public ResponseEntity retrieveRecipes(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<RecipeEntity> posts = recipeService.pageList(pageable);
-        return ResponseEntity.ok(posts.map(m -> new RecipeDto.Response(m,false)));
+    public ResponseEntity<Page<RecipeDto.Response>> retrieveRecipes(
+            @PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "nickname" , required = false, defaultValue="noLogin") String nickname){
+
+        return ResponseEntity.ok(recipeService.pageList(pageable, nickname));
     }
 
     @PostMapping("/test")

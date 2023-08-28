@@ -65,4 +65,31 @@ public class RecipeDto {
             this.tags = recipes.getRecipeTagMaps().stream().map(TagDto.Response::new).collect(Collectors.toList());
         }
     }
+
+    @RequiredArgsConstructor
+    @Getter
+    public static class ResponseSummary {
+        private final Long id;
+        private final String title;
+        private final String nickname;
+        private final LocalDateTime createdDate, modifiedDate;
+        private final int views;
+        private final int likes;
+        private final boolean likeState;
+        private final String themNailUrl;
+        private final List<TagDto.Response> tags;
+
+        public ResponseSummary(RecipeEntity recipes,boolean likeState){
+            this.id = recipes.getId();
+            this.title = recipes.getTitle();
+            this.nickname = recipes.getUser().getNickname();
+            this.createdDate = recipes.getCreatedDate();
+            this.modifiedDate = recipes.getModifiedDate();
+            this.views = recipes.getViews();
+            this.likes = recipes.getLikes();
+            this.likeState = likeState;
+            this.themNailUrl = recipes.getThemNails().get(0).getFullPath();
+            this.tags = recipes.getRecipeTagMaps().stream().map(TagDto.Response::new).collect(Collectors.toList());
+        }
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.*;
 
@@ -38,8 +39,6 @@ public class RecipeService {
     /* CREATE */
     @Transactional
     public Long save(RecipeDto.Request recipeDto) throws Exception {
-        System.out.println("title : " + recipeDto.getTitle());
-        System.out.println("title : " + recipeDto.getWriter());
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다" + recipeDto.getWriter()));
 
@@ -85,8 +84,35 @@ public class RecipeService {
 
     /* Paging and Sort */
     @Transactional(readOnly = true)
-    public Page<RecipeEntity> pageList(Pageable pageable) {
-        return recipeRepository.findAll(pageable);
+    public Page<RecipeDto.Response> pageList(Pageable pageable, String nickName) {
+        Page<RecipeEntity> recipePage = recipeRepository.findAll(pageable);
+        List<RecipeDto.Response> recipes = new ArrayList<>();
+        UserEntity user= null;
+
+        if(!nickName.equals("noLogin")){
+            user = authRepository.findByNickname(nickName).orElseThrow(() ->
+                    new IllegalArgumentException("해당 유저가 존재하지 않습니다" + nickName));
+        }
+
+
+        for (RecipeEntity recipe : recipePage.getContent()) {
+            if(user == null){
+                recipes.add(new RecipeDto.Response(recipe, false));
+            }else{
+                Optional<RecipeLikeEntity> findLike = findLike(recipe.getId(), user.getId());
+                if(findLike.isEmpty()){
+                    recipes.add(new RecipeDto.Response(recipe,false));
+                }else{
+                    recipes.add(new RecipeDto.Response(recipe,true));
+                }
+            }
+
+
+
+        }
+        return new PageImpl<>(recipes, pageable, recipePage.getTotalElements());
+//        return PageImpl<>(recipes,pageable,recipePage.getTotalElements());
+
     }
 
     @Transactional(readOnly = true)
@@ -233,10 +259,9 @@ public class RecipeService {
         return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
     }
 
-    public List<RecipeEntity> searchInfo(String searchText){
-        List<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText);
+    public Page<RecipeEntity> searchInfo(String searchText, Pageable pageable){
+        Page<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText, pageable);
 
-        System.out.println(store.get(0).getTitle());
         return store;
     }
 
