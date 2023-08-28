@@ -57,9 +57,10 @@ public class FileHandler {
                 throw new IllegalBlockSizeException("옳지 않은 확장자명");
         }
 
+        String randFileName = String.valueOf(System.nanoTime());
         // 파일명 중복 피하고자 나노초까지 얻어와 지정
-        String new_file_name = absolutePath + path + File.separator + System.nanoTime() + originalFileExtension;
-        String save_name = File.separator + System.nanoTime() + originalFileExtension;
+        String new_file_name = absolutePath + path + File.separator + randFileName + originalFileExtension;
+        String save_name = path + File.separator + randFileName + originalFileExtension;
 
         ImageFile = Image.builder()
                 .originFileName(multipartFile.getOriginalFilename())

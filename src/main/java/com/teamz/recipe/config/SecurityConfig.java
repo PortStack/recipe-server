@@ -54,7 +54,7 @@ public class SecurityConfig {
                 );
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","recipe/read/*","/recipe", "recipe/comment/*/read", "board/read/*","/board", "board/comment/*/read","/images/*/*", "/main/*").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login","/auth/refreshToken","recipe/read/*","/recipe","/recipe/category", "recipe/comment/*/read", "board/read/*","/board", "board/comment/*/read","/images/*/*", "/main/*").permitAll()
                         .requestMatchers( "/auth/logout",
                                 "/recipe/new",
                                 "/recipe/like/*",
