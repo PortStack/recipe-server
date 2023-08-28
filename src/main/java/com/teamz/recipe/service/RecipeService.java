@@ -39,6 +39,7 @@ public class RecipeService {
     @Transactional
     public Long save(RecipeDto.Request recipeDto) throws Exception {
         System.out.println("title : " + recipeDto.getTitle());
+        System.out.println("title : " + recipeDto.getWriter());
         UserEntity user = authRepository.findByNickname(recipeDto.getWriter()).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 존재하지 않습니다" + recipeDto.getWriter()));
 
@@ -179,6 +180,24 @@ public class RecipeService {
             }
         }
 
+    }
+
+    @Transactional
+    public boolean delete(Long recipeId, String account){
+        //아이디 검색
+        UserEntity user = authRepository.findByAccount(account).orElseThrow(() ->
+                new IllegalArgumentException("해당 아이다가 존재하지 않습니다. nickName: " + account));
+
+        RecipeEntity recipe = recipeRepository.findById(recipeId).orElseThrow(() ->
+                new IllegalArgumentException("해당 레시피가 존재하지 않습니다. recipeId: " + recipeId));
+
+        if(recipe.getUser().getId().equals(user.getId())){
+            new IllegalArgumentException("삭제 권한이 없습니다. recipeId: " + recipeId);
+        }
+
+        recipeRepository.delete(recipe);
+
+        return true;
     }
 
     //좋아요

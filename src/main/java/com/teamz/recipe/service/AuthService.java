@@ -50,13 +50,6 @@ public class AuthService {
 
     public boolean register(AuthDto.RequestRegister request) throws Exception {
         try {
-            if(request.getAccount().length() == 0){
-                throw new BadCredentialsException("아이디가 존재하지 않습니다");
-            }
-
-            if(!ConfirmationPassword(request.getPassword())){
-                throw new BadCredentialsException("비밀번호 조건이 틀렸습니다");
-            }
             UserEntity user = UserEntity.builder()
                     .account(request.getAccount())
                     .password(passwordEncoder.encode(request.getPassword()))

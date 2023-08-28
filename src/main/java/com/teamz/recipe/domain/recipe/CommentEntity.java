@@ -8,6 +8,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,6 +32,10 @@ public class CommentEntity {
     @LastModifiedDate
     private String modifiedDate;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_id")
+    private CommentEntity parent;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "RECIPE_ID")
@@ -40,7 +46,7 @@ public class CommentEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user; // 작성자
 
-    public void update(String comment){
+    public void updateComment(String comment){
         this.comment = comment;
     }
 

@@ -57,7 +57,9 @@ public class CommentService {
         CommentEntity comment = commentRepository.findByRecipe_IdAndId(recipeId, id).orElseThrow(() ->
                 new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + id));
 
-        comment.update(dto.getComment());
+        comment.updateComment(dto.getComment());
+
+        commentRepository.save(comment);
     }
 
     /* DELETE */
@@ -65,6 +67,8 @@ public class CommentService {
     public void delete(Long recipesId, Long id) {
         CommentEntity comment = commentRepository.findByRecipe_IdAndId(recipesId, id).orElseThrow(() ->
                 new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + id));
+
+        comment.updateComment(null);
 
         commentRepository.delete(comment);
     }

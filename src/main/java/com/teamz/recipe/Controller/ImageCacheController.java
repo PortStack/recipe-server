@@ -16,7 +16,7 @@ import java.io.IOException;
 @Controller
 public class ImageCacheController {
 
-    private static final String CACHE_DIRECTORY = "/Users/gimmunjin/Study/recipe-server/images/";
+    private static final String CACHE_DIRECTORY = "/Users/gimmunjin/study/recipe-server/images/";
 
 
     @GetMapping(value="/images/{folderName}/{imageName}", produces = MediaType.IMAGE_PNG_VALUE)
@@ -31,6 +31,7 @@ public class ImageCacheController {
             fileInputStream.close();
             return new ResponseEntity<byte[]>(imageBytes, HttpStatus.OK);
         } else {
+            System.out.println("data");
             // 이미지 파일이 캐시 디렉토리에 존재하지 않으면 에러를 반환합니다.
             return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
         }

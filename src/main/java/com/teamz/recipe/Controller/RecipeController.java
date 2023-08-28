@@ -2,8 +2,10 @@ package com.teamz.recipe.Controller;
 
 
 import com.teamz.recipe.Dto.RecipeDto;
+import com.teamz.recipe.Dto.TagDto;
 import com.teamz.recipe.domain.recipe.RecipeEntity;
 import com.teamz.recipe.domain.UserEntity;
+import com.teamz.recipe.domain.recipe.Tag;
 import com.teamz.recipe.service.AuthService;
 import com.teamz.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class RecipeController {
     private final AuthService authService;
 
     @PostMapping("/new")
-    public ResponseEntity save(@RequestPart("dto") RecipeDto.Request dto,
+    public ResponseEntity save(RecipeDto.Request dto,
                                @RequestPart("orderImage") List<MultipartFile> orderImage,
                                @RequestPart("themNail") List<MultipartFile> themNail,
                                @AuthenticationPrincipal UserDetails userDetails) throws Exception {
@@ -77,10 +79,16 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.saveLike(idx,userDetails.getUsername()));
     }
 
-    @GetMapping("category")
+    @GetMapping("/category")
     public ResponseEntity category(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<RecipeEntity> posts = recipeService.pageList(pageable);
-        return ResponseEntity.ok(posts.map(m -> new RecipeDto.Response(m,false)));
+        Page<Tag> tags = recipeService.getCategories(pageable);
+        return ResponseEntity.ok(tags);
     }
 
+    @DeleteMapping("/delete/{idx}")
+    public ResponseEntity delete(@PathVariable Long idx,@AuthenticationPrincipal UserDetails userDetails){
+        System.out.println(idx);
+        boolean result = recipeService.delete(idx,userDetails.getUsername());
+        return ResponseEntity.ok(result);
+    }
 }
