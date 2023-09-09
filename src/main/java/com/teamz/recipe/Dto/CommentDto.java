@@ -43,7 +43,7 @@ public class CommentDto {
      */
     @RequiredArgsConstructor
     @Getter
-    public static class Response {
+    public static class Response implements Comparable<CommentDto.Response> {
         private final Long id;
         private final String comment; // 댓글 내용
         private final String createdDate;
@@ -59,6 +59,13 @@ public class CommentDto {
             this.modifiedDate = comments.getModifiedDate();
             this.recipe_id = comments.getRecipe().getId();
             this.nickName = comments.getUser().getNickname();
+        }
+
+        @Override
+        public int compareTo(Response other) {
+            // 역순으로 정렬하려면 other와 현재 객체(this)의 id를 비교하여 비교 결과를 반환합니다.
+            // 역순 정렬을 위해서는 other가 더 작을 경우 양수를, 같을 경우 0을, 더 클 경우 음수를 반환합니다.
+            return other.id.compareTo(this.id);
         }
     }
 

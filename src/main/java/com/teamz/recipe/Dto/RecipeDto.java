@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,9 +60,38 @@ public class RecipeDto {
             this.likes = recipes.getLikes();
             this.likeState = likeState;
             this.themNailUrl = recipes.getThemNails().get(0).getFullPath();
-            this.comments = recipes.getComments().stream().map(CommentDto.Response::new).collect(Collectors.toList());
+            this.comments = recipes.getComments().stream().map(CommentDto.Response::new)
+                    .sorted()
+                    .collect(Collectors.toList());
             this.ingredientList = recipes.getRecipeIngredients().stream().map(RecipeIngredientDto.Response::new).collect(Collectors.toList());
             this.cookOrderList = recipes.getCookOrders().stream().map(CookOrderDto.Response::new).collect(Collectors.toList());
+            this.tags = recipes.getRecipeTagMaps().stream().map(TagDto.Response::new).collect(Collectors.toList());
+        }
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public static class ResponseSummary {
+        private final Long id;
+        private final String title;
+        private final String nickname;
+        private final LocalDateTime createdDate, modifiedDate;
+        private final int views;
+        private final int likes;
+        private final boolean likeState;
+        private final String themNailUrl;
+        private final List<TagDto.Response> tags;
+
+        public ResponseSummary(RecipeEntity recipes,boolean likeState){
+            this.id = recipes.getId();
+            this.title = recipes.getTitle();
+            this.nickname = recipes.getUser().getNickname();
+            this.createdDate = recipes.getCreatedDate();
+            this.modifiedDate = recipes.getModifiedDate();
+            this.views = recipes.getViews();
+            this.likes = recipes.getLikes();
+            this.likeState = likeState;
+            this.themNailUrl = recipes.getThemNails().get(0).getFullPath();
             this.tags = recipes.getRecipeTagMaps().stream().map(TagDto.Response::new).collect(Collectors.toList());
         }
     }

@@ -90,6 +90,7 @@ public class UserController {
     @Transactional
     @PostMapping("/refreshToken")
     public ResponseEntity requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) throws Exception {
+
         RefreshTokenEntity refreshTokenEntity = refreshTokenService.findRefreshToken(refreshTokenDto.getRefreshToken()).orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
         Claims claims = jwtProvider.parseRefreshToken(refreshTokenEntity.getValue());
 
@@ -102,7 +103,7 @@ public class UserController {
 
 
         String accessToken = jwtProvider.createAccessToken(account, userId, role);
-        String refreshToken = jwtProvider.createAccessToken(account, userId, role);
+        String refreshToken = jwtProvider.createRefreshToken(account, userId, role);
 
         //refreshToken 데이터베이스 저장
         RefreshTokenEntity newRefreshTokenEntity = RefreshTokenEntity.builder()

@@ -62,7 +62,7 @@ public class SecurityConfig {
                                 "/recipe/delete/*",
                                 "/recipe/comment/new/*",
                                 "/recipe/comment/*/update/*",
-                                "/recipe/comment/*/delete/*",
+                                "/recipe/comment/delete/*",
                                 "/recipe/*/comment/*",
                                 "/board/new",
                                 "/board/like/*",

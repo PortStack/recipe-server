@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/recipe/comment")
 @RequiredArgsConstructor
@@ -21,32 +22,29 @@ public class CommentController {
 
     /* CREATE */
     @PostMapping("/new/{recipeId}")
-    public ResponseEntity save(@PathVariable Long recipeId, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails){
-        System.out.println(recipeId);
-        System.out.println((userDetails.getUsername()));
-        System.out.println(dto.getComment());
+    public ResponseEntity<Long> save(@PathVariable Long recipeId, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(commentService.save(recipeId,userDetails.getUsername(),dto));
     }
 
     /* READ */
     @GetMapping("/{recipeId}/read")
     public List<CommentDto.Response> read(@PathVariable Long recipeId) {
-        return commentService.findAll(recipeId);
+        return commentService.findAll(recipeId).stream().sorted().collect(Collectors.toList());
     }
 
     /* UPDATE */
     @PutMapping({"/{recipeId}/update/{id}"})
-    public ResponseEntity<Long> update(@PathVariable Long recipeId, @PathVariable Long id, @RequestBody CommentDto.Request dto) {
+    public ResponseEntity<Long> update(@PathVariable Long recipeId, @PathVariable Long id, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails) {
         System.out.println(recipeId);
         System.out.println(dto.getComment());
-        commentService.update(recipeId, id, dto);
+        commentService.update(recipeId, id, dto,userDetails.getUsername());
         return ResponseEntity.ok(id);
     }
 
     /* DELETE */
-    @DeleteMapping("/{recipeId}/delete/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long recipesId, @PathVariable Long id) {
-        commentService.delete(recipesId, id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Long> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        commentService.delete(id,userDetails.getUsername());
         return ResponseEntity.ok(id);
     }
 }

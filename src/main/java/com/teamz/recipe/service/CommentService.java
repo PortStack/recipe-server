@@ -53,9 +53,12 @@ public class CommentService {
 
     /* UPDATE */
     @Transactional
-    public void update(Long recipeId, Long id, CommentDto.Request dto) {
+    public void update(Long recipeId, Long id, CommentDto.Request dto, String account) {
         CommentEntity comment = commentRepository.findByRecipe_IdAndId(recipeId, id).orElseThrow(() ->
                 new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + id));
+
+        UserEntity user = authRepository.findByAccount(account).orElseThrow(() ->
+                new IllegalArgumentException("댓글 쓰기 실패: 해당 유저가 존재하지 않는다"));
 
         comment.updateComment(dto.getComment());
 
@@ -64,13 +67,25 @@ public class CommentService {
 
     /* DELETE */
     @Transactional
-    public void delete(Long recipesId, Long id) {
-        CommentEntity comment = commentRepository.findByRecipe_IdAndId(recipesId, id).orElseThrow(() ->
+    public void delete( Long id, String account) {
+        CommentEntity comment = commentRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + id));
 
-        comment.updateComment(null);
+        UserEntity user = authRepository.findByAccount(account).orElseThrow(() ->
+                new IllegalArgumentException("댓글 삭제 실패: 존재하지 않는 유저입니다"));
+        System.out.println(comment.getUser().getId());
+        System.out.println(user.getId());
+        if(comment.getUser().getId().equals(user.getId())){
+            comment.updateComment(null);
 
-        commentRepository.delete(comment);
+            commentRepository.delete(comment);
+
+        }else{
+            System.out.println("error");
+            new IllegalArgumentException("댓글 삭제 실패: 작성자가 아닙니다.");
+        }
+
+
     }
 
 }
