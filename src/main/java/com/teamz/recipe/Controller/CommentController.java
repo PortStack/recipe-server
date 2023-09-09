@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/recipe/comment")
 @RequiredArgsConstructor
@@ -21,17 +22,14 @@ public class CommentController {
 
     /* CREATE */
     @PostMapping("/new/{recipeId}")
-    public ResponseEntity save(@PathVariable Long recipeId, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails){
-        System.out.println(recipeId);
-        System.out.println((userDetails.getUsername()));
-        System.out.println(dto.getComment());
+    public ResponseEntity<Long> save(@PathVariable Long recipeId, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(commentService.save(recipeId,userDetails.getUsername(),dto));
     }
 
     /* READ */
     @GetMapping("/{recipeId}/read")
     public List<CommentDto.Response> read(@PathVariable Long recipeId) {
-        return commentService.findAll(recipeId);
+        return commentService.findAll(recipeId).stream().sorted().collect(Collectors.toList());
     }
 
     /* UPDATE */

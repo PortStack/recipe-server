@@ -32,8 +32,8 @@ public class MainController {
                                                      @RequestParam(value = "nickname" , required = false, defaultValue="noLogin") String nickname,
                                                      @PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
         System.out.println(searchText);
-        Page<RecipeEntity> searchRecipe = recipeService.searchInfo(searchText,pageable);
-        return ResponseEntity.ok(searchRecipe.map(m -> new RecipeDto.Response(m,false)));
+        Page<RecipeDto.Response> searchRecipe = recipeService.searchInfo(searchText,pageable,nickname);
+        return ResponseEntity.ok(searchRecipe);
     }
 
     @GetMapping("/recomend")

@@ -45,6 +45,8 @@ public class RecipeController {
         recipeService.updateView(id);
         RecipeEntity recipeEntity = recipeService.findById(id);
 
+        System.out.println(nickname);
+
         if(!nickname.equals("noLogin")){
             UserEntity userEntity = authService.findByNickname(nickname);
             if(!recipeService.findLike(id,userEntity.getId()).isEmpty()){
@@ -77,11 +79,13 @@ public class RecipeController {
 
     @GetMapping("/like/{idx}")
     public ResponseEntity like(@PathVariable Long idx,@AuthenticationPrincipal UserDetails userDetails){
+        System.out.println(userDetails.getUsername());
         return ResponseEntity.ok(recipeService.saveLike(idx,userDetails.getUsername()));
     }
 
     @GetMapping("/category")
     public ResponseEntity category(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+
         Page<Tag> tags = recipeService.getCategories(pageable);
         return ResponseEntity.ok(tags);
     }

@@ -259,10 +259,32 @@ public class RecipeService {
         return recipeLikeRepository.findByRecipe_IdAndUser_Id(recipeID, userID);
     }
 
-    public Page<RecipeEntity> searchInfo(String searchText, Pageable pageable){
+    public Page<RecipeDto.Response> searchInfo(String searchText, Pageable pageable, String nickName){
         Page<RecipeEntity> store = recipeRepository.findByTitleContaining(searchText, pageable);
+        List<RecipeDto.Response> recipes = new ArrayList<>();
+        UserEntity user= null;
+        if(!nickName.equals("noLogin")){
+            user = authRepository.findByNickname(nickName).orElseThrow(() ->
+                    new IllegalArgumentException("해당 유저가 존재하지 않습니다" + nickName));
+        }
 
-        return store;
+
+        for (RecipeEntity recipe : store.getContent()) {
+            if(user == null){
+                recipes.add(new RecipeDto.Response(recipe, false));
+            }else{
+                Optional<RecipeLikeEntity> findLike = findLike(recipe.getId(), user.getId());
+                if(findLike.isEmpty()){
+                    recipes.add(new RecipeDto.Response(recipe,false));
+                }else{
+                    recipes.add(new RecipeDto.Response(recipe,true));
+                }
+            }
+
+
+
+        }
+        return new PageImpl<>(recipes, pageable, store.getTotalElements());
     }
 
     public List<RecipeEntity> recomendInfo() {
