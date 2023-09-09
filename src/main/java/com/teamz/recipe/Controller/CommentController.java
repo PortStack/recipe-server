@@ -34,17 +34,17 @@ public class CommentController {
 
     /* UPDATE */
     @PutMapping({"/{recipeId}/update/{id}"})
-    public ResponseEntity<Long> update(@PathVariable Long recipeId, @PathVariable Long id, @RequestBody CommentDto.Request dto) {
+    public ResponseEntity<Long> update(@PathVariable Long recipeId, @PathVariable Long id, @RequestBody CommentDto.Request dto, @AuthenticationPrincipal UserDetails userDetails) {
         System.out.println(recipeId);
         System.out.println(dto.getComment());
-        commentService.update(recipeId, id, dto);
+        commentService.update(recipeId, id, dto,userDetails.getUsername());
         return ResponseEntity.ok(id);
     }
 
     /* DELETE */
-    @DeleteMapping("/{recipeId}/delete/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long recipesId, @PathVariable Long id) {
-        commentService.delete(recipesId, id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Long> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        commentService.delete(id,userDetails.getUsername());
         return ResponseEntity.ok(id);
     }
 }
